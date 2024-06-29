@@ -150,17 +150,17 @@ const _nav = [
           {
               component: CNavItem,
               name: 'Tools',
-              to: '/buttons/button-groups',
+              to: '/itemwisetools',
           },
           {
             component: CNavItem,
             name: 'PPE',
-            to: '/buttons/button-groups',
+            to: '/itemwiseppe',
         },
         {
           component: CNavItem,
           name: 'Dress',
-          to: '/buttons/button-groups',
+          to: '/itemwisedress',
       }
         ]
       },

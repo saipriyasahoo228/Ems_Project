@@ -1,7 +1,11 @@
+import { element } from 'prop-types'
 import React from 'react'
 
 const Dashboard = React.lazy(() => import('./views/dashboard/Dashboard'))
 const Colors = React.lazy(() => import('./views/theme/colors/Safety'))
+const Itemwisetool=React.lazy(()=>import('./views/itemwisetools/Itemwisetools'))
+const itemwiseppe =React.lazy(()=>import('./views/itemwiseppe/Itemwiseppe'))
+const itemwisedress=React.lazy(()=>import('./views/itemwisedress/Itemwisedress'))
 // const Typography = React.lazy(() => import('./views/theme/typography/Typography'))
 
 // // Base
@@ -56,6 +60,9 @@ const routes = [
   { path: '/dashboard', name: 'Dashboard', element: Dashboard },
   { path: '/theme', name: 'Theme', element: Colors, exact: true },
   { path: '/theme/colors', name: 'Colors', element: Colors },
+  {path: '/itemwisetools',name:'Itemwisetool',element:Itemwisetool},
+  {path:'/itemwiseppe',name:'itemwiseppe',element:itemwiseppe},
+  {path:'/itemwisedress',name:'itemwisedress',element:itemwisedress},
   // { path: '/theme/typography', name: 'Typography', element: Typography },
   // { path: '/base', name: 'Base', element: Cards, exact: true },
   // { path: '/base/accordion', name: 'Accordion', element: Accordion },
