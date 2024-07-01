@@ -6,6 +6,8 @@ const Colors = React.lazy(() => import('./views/theme/colors/Safety'))
 const Itemwisetool=React.lazy(()=>import('./views/itemwisetools/Itemwisetools'))
 const itemwiseppe =React.lazy(()=>import('./views/itemwiseppe/Itemwiseppe'))
 const itemwisedress=React.lazy(()=>import('./views/itemwisedress/Itemwisedress'))
+const employeewiseserach=React.lazy(()=>import('./views/employeewisesearch/Employeewisesearch'))
+const aftersearchtool=React.lazy(()=>import('./views/aftersearchtool/Aftersearchtool'))
 // const Typography = React.lazy(() => import('./views/theme/typography/Typography'))
 
 // // Base
@@ -63,6 +65,8 @@ const routes = [
   {path: '/itemwisetools',name:'Itemwisetool',element:Itemwisetool},
   {path:'/itemwiseppe',name:'itemwiseppe',element:itemwiseppe},
   {path:'/itemwisedress',name:'itemwisedress',element:itemwisedress},
+  {path:'/employeewisesearch',name:'employeewiseserach',element:employeewiseserach},
+  {path:'/aftersearchtool',name:'aftersearchtool',element:aftersearchtool},
   // { path: '/theme/typography', name: 'Typography', element: Typography },
   // { path: '/base', name: 'Base', element: Cards, exact: true },
   // { path: '/base/accordion', name: 'Accordion', element: Accordion },

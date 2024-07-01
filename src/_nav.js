@@ -167,12 +167,12 @@ const _nav = [
       {
         component: CNavItem,
         name: 'Employee Wise',
-        to: '/buttons/button-groups',
+        to: '/employeewisesearch',
       },
       {
         component: CNavItem,
         name: 'Organization Wise',
-        to: '/buttons/dropdowns',
+        to: '/aftersearchtool',
       },
     ],
   },

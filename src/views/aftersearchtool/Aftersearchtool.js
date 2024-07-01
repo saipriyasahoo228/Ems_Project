@@ -20,12 +20,12 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
 
-function createData(id, empcode, empname, clampmeter, plier, hammer) {
-  return { id, empcode, empname, clampmeter, plier, hammer };
+function createData(id,slno,toollist,issuedate,nextissue) {
+  return { id,slno,toollist,issuedate,nextissue };
 }
 
 const rows = [
-  createData(1, '21MMCA60', 'Saipriya Sahoo', '5/6/2023', '5/6/2023', '5/6/2023'),
+  createData(1,'21mmca60','Hammer','5/3/20024','5/8/2024'),
   // additional rows...
 ];
 
@@ -58,11 +58,11 @@ function stableSort(array, comparator) {
 }
 
 const headCells = [
-  { id: 'empcode', numeric: false, disablePadding: true, label: 'Employee Code' },
-  { id: 'empname', numeric: true, disablePadding: false, label: 'Employee Name' },
-  { id: 'clampmeter', numeric: true, disablePadding: false, label: 'Clampmeter' },
-  { id: 'plier', numeric: true, disablePadding: false, label: 'Plier' },
-  { id: 'hammer', numeric: true, disablePadding: false, label: 'Hammer' },
+  { id: 'slno', numeric: false, disablePadding: true, label: 'SL NO.' },
+  { id: 'toollist', numeric: true, disablePadding: false, label: 'TOOL LIST' },
+  { id: 'issuedate', numeric: true, disablePadding: false, label: 'ISSUED DATE' },
+  { id: 'nextissue', numeric: true, disablePadding: false, label: 'NEXT ISSUANCE' },
+ 
 ];
 
 function EnhancedTableHead(props) {
@@ -154,7 +154,7 @@ EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
 };
 
-export default function Itemwisetool() {
+export default function Aftersearchtool() {
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('empcode');
   const [selected, setSelected] = React.useState([]);
@@ -250,12 +250,12 @@ export default function Itemwisetool() {
                   >
                     {/* Remove the checkbox column */}
                     <TableCell component="th" id={labelId} scope="row" padding="none">
-                      {row.empcode}
+                      {row.slno}
                     </TableCell>
-                    <TableCell align="right">{row.empname}</TableCell>
-                    <TableCell align="right">{row.clampmeter}</TableCell>
-                    <TableCell align="right">{row.plier}</TableCell>
-                    <TableCell align="right">{row.hammer}</TableCell>
+                    <TableCell align="right">{row.toollist}</TableCell>
+                    <TableCell align="right">{row.issuedate}</TableCell>
+                    <TableCell align="right">{row.nextissue}</TableCell>
+                    
                   </TableRow>
                 );
               })}

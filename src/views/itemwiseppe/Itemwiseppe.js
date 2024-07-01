@@ -129,7 +129,7 @@ function EnhancedTableToolbar(props) {
         </Typography>
       ) : (
         <Typography sx={{ flex: '1 1 100%' }} variant="h6" id="tableTitle" component="div">
-          ITEMWISE-PPE
+          PPE
         </Typography>
       )}
 
@@ -220,7 +220,7 @@ export default function Itemwisetool() {
 
   return (
     <Box sx={{ width: '100%' }}>
-      <Paper sx={{ width: '100%', mb: 2 }}>
+      <Paper sx={{ width: '100%', mb: 2 ,padding:5}}>
         <EnhancedTableToolbar numSelected={selected.length} />
         <TableContainer>
           <Table sx={{ minWidth: 750 }} aria-labelledby="tableTitle">
