@@ -20,12 +20,12 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
 
-function createData(id, empcode, empname, clampmeter, plier, hammer) {
-  return { id, empcode, empname, clampmeter, plier, hammer };
+function createData(id,slno,toolboxtraining,date,trainername,refrno) {
+  return { id,slno,toolboxtraining,date,trainername,refrno };
 }
 
 const rows = [
-  createData(1, '21MMCA60', 'Saipriya Sahoo', '5/6/2023', '5/6/2023', '5/6/2023'),
+  createData(1,'21mmca60','Hammer','5/3/20024','5/8/2024','32135'),
   // additional rows...
 ];
 
@@ -58,11 +58,12 @@ function stableSort(array, comparator) {
 }
 
 const headCells = [
-  { id: 'empcode', numeric: false, disablePadding: true, label: 'Employee Code' },
-  { id: 'empname', numeric: true, disablePadding: false, label: 'Employee Name' },
-  { id: 'clampmeter', numeric: true, disablePadding: false, label: 'Clampmeter' },
-  { id: 'plier', numeric: true, disablePadding: false, label: 'Plier' },
-  { id: 'hammer', numeric: true, disablePadding: false, label: 'Hammer' },
+  { id: 'slno', numeric: false, disablePadding: true, label: 'SL NO.' },
+  { id: 'toolboxtraining', numeric: true, disablePadding: false, label: 'TOOLBOX TRAINING' },
+  { id: 'date', numeric: true, disablePadding: false, label: 'DATE' },
+  { id: 'trainername', numeric: true, disablePadding: false, label: 'TRAINER NAME' },
+  { id: 'refrno', numeric: true, disablePadding: false, label: 'REFERENCE NUMBER' },
+ 
 ];
 
 function EnhancedTableHead(props) {
@@ -128,8 +129,8 @@ function EnhancedTableToolbar(props) {
           {numSelected} selected
         </Typography>
       ) : (
-        <Typography sx={{ flex: '1 1 100%' }} variant="h6" id="tableTitle" component="div">
-          TOOLS
+        <Typography sx={{ flex: '1 1 100%' ,textAlign:'center'}} variant="h6" id="tableTitle" component="div">
+          ToolBox Training
         </Typography>
       )}
 
@@ -154,7 +155,7 @@ EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
 };
 
-export default function Itemwisetool() {
+export default function Toolboxtraining() {
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('empcode');
   const [selected, setSelected] = React.useState([]);
@@ -219,7 +220,7 @@ export default function Itemwisetool() {
   );
 
   return (
-    <Box sx={{ width: '100%' ,display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center'}}>
+    <Box sx={{ width: '100%' }}>
       <Paper sx={{ width: '100%', mb: 2 ,padding:5}}>
         <EnhancedTableToolbar numSelected={selected.length} />
         <TableContainer>
@@ -250,12 +251,13 @@ export default function Itemwisetool() {
                   >
                     {/* Remove the checkbox column */}
                     <TableCell component="th" id={labelId} scope="row" padding="none">
-                      {row.empcode}
+                      {row.slno}
                     </TableCell>
-                    <TableCell align="right">{row.empname}</TableCell>
-                    <TableCell align="right">{row.clampmeter}</TableCell>
-                    <TableCell align="right">{row.plier}</TableCell>
-                    <TableCell align="right">{row.hammer}</TableCell>
+                    <TableCell align="right">{row.toolboxtraining}</TableCell>
+                    <TableCell align="right">{row.date}</TableCell>
+                    <TableCell align="right">{row.trainername}</TableCell>
+                    <TableCell align="right">{row.refrno}</TableCell>
+                    
                   </TableRow>
                 );
               })}

@@ -220,7 +220,7 @@ export default function Itemwisedress() {
   );
 
   return (
-    <Box sx={{ width: '100%' }}>
+    <Box sx={{ width: '100%' ,display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center'}}>
       <Paper sx={{ width: '100%', mb: 2 ,padding:5}}>
         <EnhancedTableToolbar numSelected={selected.length} />
         <TableContainer>

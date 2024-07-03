@@ -17,7 +17,7 @@ const Employeewisesearch = () => {
 
   const handleSearch = () => {
     // Perform any search logic here if needed
-    navigate('/empsearch'); // Replace '/target-page' with the actual path you want to navigate to
+    navigate('/aftersearch'); // Replace '/target-page' with the actual path you want to navigate to
   };
 
   return (

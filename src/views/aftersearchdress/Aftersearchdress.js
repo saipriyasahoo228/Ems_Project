@@ -25,7 +25,7 @@ function createData(id,slno,dresslist,issuedate,nextissue) {
 }
 
 const rows = [
-  createData(1,'21mmca60','Hammer','5/3/20024','5/8/2024'),
+  createData(1,'21mmca60','Raincoat','5/3/20024','5/8/2024'),
   // additional rows...
 ];
 
@@ -128,7 +128,7 @@ function EnhancedTableToolbar(props) {
           {numSelected} selected
         </Typography>
       ) : (
-        <Typography sx={{ flex: '1 1 100%' }} variant="h6" id="tableTitle" component="div">
+        <Typography sx={{ flex: '1 1 100%' ,textAlign:'center'}} variant="h6" id="tableTitle" component="div">
           DRESS
         </Typography>
       )}

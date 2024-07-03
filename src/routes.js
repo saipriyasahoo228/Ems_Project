@@ -7,7 +7,12 @@ const Itemwisetool=React.lazy(()=>import('./views/itemwisetools/Itemwisetools'))
 const itemwiseppe =React.lazy(()=>import('./views/itemwiseppe/Itemwiseppe'))
 const itemwisedress=React.lazy(()=>import('./views/itemwisedress/Itemwisedress'))
 const employeewiseserach=React.lazy(()=>import('./views/employeewisesearch/Employeewisesearch'))
-const aftersearchtool=React.lazy(()=>import('./views/aftersearchtool/Aftersearchtool'))
+const aftersearchbody=React.lazy(()=>import('./views/aftersearchbody/Afterseachbody'))
+const organizationalreportbody=React.lazy(()=>import('./views/organizationalreportbody/Organizationalreportbody'))
+const AfterSearchBody = React.lazy(() => import('./views/aftersearchbody/Afterseachbody'))
+const upcoming15daysbody=React.lazy(()=>import('./views/upcoming15daysbody/Upcoming15daysbody'))
+const upcoming30daysbody=React.lazy(()=>import('./views/upcoming30daysbody/Upcoming30daysbody'))
+const upcoming45daysbody=React.lazy(()=>import('./views/upcoming45daysbody/Upcoming45daysbody'))
 // const Typography = React.lazy(() => import('./views/theme/typography/Typography'))
 
 // // Base
@@ -66,7 +71,12 @@ const routes = [
   {path:'/itemwiseppe',name:'itemwiseppe',element:itemwiseppe},
   {path:'/itemwisedress',name:'itemwisedress',element:itemwisedress},
   {path:'/employeewisesearch',name:'employeewiseserach',element:employeewiseserach},
-  {path:'/aftersearchtool',name:'aftersearchtool',element:aftersearchtool},
+  {path:'/aftersearchbody',name:'aftersearchbody',element:aftersearchbody},
+  {path:'/organizationalreportbody',name:'organizationalreportbody',element:organizationalreportbody},
+  { path:"/aftersearch", name:'AfterSearchBody',element:AfterSearchBody},
+  {path:"/upcoming15daysbody",name:'upcoming15daysbody',element:upcoming15daysbody},
+  {path:"/upcoming30daysbody",name:'upcoming30daysbody',element:upcoming30daysbody},
+  {path:"/upcoming45daysbody",name:'upcoming45daysbody',element:upcoming45daysbody},
   // { path: '/theme/typography', name: 'Typography', element: Typography },
   // { path: '/base', name: 'Base', element: Cards, exact: true },
   // { path: '/base/accordion', name: 'Accordion', element: Accordion },

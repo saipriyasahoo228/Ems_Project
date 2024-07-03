@@ -13,20 +13,32 @@ import TableSortLabel from '@mui/material/TableSortLabel';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
-import Checkbox from '@mui/material/Checkbox';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Switch from '@mui/material/Switch';
 import DeleteIcon from '@mui/icons-material/Delete';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
 
-function createData(id, empcode, empname, clampmeter, plier, hammer) {
-  return { id, empcode, empname, clampmeter, plier, hammer };
+function createData(id, name, protein) {
+  return { id, name, protein };
 }
 
 const rows = [
-  createData(1, '21MMCA60', 'Saipriya Sahoo', '5/6/2023', '5/6/2023', '5/6/2023'),
-  // additional rows...
+  createData(1, 'Dress', 4),
+  createData(2, 'Jacket', 2),
+  createData(3, 'Raincoat', 6),
+//   createData(4, 'Frozen yoghurt', 4.0),
+//   createData(5, 'Gingerbread', 3.9),
+//   createData(6, 'Honeycomb', 6.5),
+//   createData(7, 'Ice cream sandwich', 4.3),
+//   createData(8, 'Jelly Bean', 0.0),
+//   createData(9, 'KitKat', 7.0),
+//   createData(10, 'Lollipop', 0.0),
+//   createData(11, 'Marshmallow', 2.0),
+//   createData(12, 'Nougat', 37.0),
+//   createData(13, 'Oreo', 4.0),
 ];
 
 function descendingComparator(a, b, orderBy) {
@@ -58,15 +70,12 @@ function stableSort(array, comparator) {
 }
 
 const headCells = [
-  { id: 'empcode', numeric: false, disablePadding: true, label: 'Employee Code' },
-  { id: 'empname', numeric: true, disablePadding: false, label: 'Employee Name' },
-  { id: 'clampmeter', numeric: true, disablePadding: false, label: 'Clampmeter' },
-  { id: 'plier', numeric: true, disablePadding: false, label: 'Plier' },
-  { id: 'hammer', numeric: true, disablePadding: false, label: 'Hammer' },
+  { id: 'name', numeric: false, disablePadding: true, label: 'Item Name' },
+  { id: 'protein', numeric: true, disablePadding: false, label: 'Number' },
 ];
 
 function EnhancedTableHead(props) {
-  const { onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } = props;
+  const { order, orderBy, onRequestSort } = props;
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
   };
@@ -74,12 +83,11 @@ function EnhancedTableHead(props) {
   return (
     <TableHead>
       <TableRow>
-        {/* Remove the checkbox column */}
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
             align={headCell.numeric ? 'right' : 'left'}
-            padding={headCell.disablePadding ? 'none' : 'normal'}
+            padding={headCell.disablePadding ? '4' : 'normal'}
             sortDirection={orderBy === headCell.id ? order : false}
           >
             <TableSortLabel
@@ -102,12 +110,9 @@ function EnhancedTableHead(props) {
 }
 
 EnhancedTableHead.propTypes = {
-  numSelected: PropTypes.number.isRequired,
   onRequestSort: PropTypes.func.isRequired,
-  onSelectAllClick: PropTypes.func.isRequired,
   order: PropTypes.oneOf(['asc', 'desc']).isRequired,
   orderBy: PropTypes.string.isRequired,
-  rowCount: PropTypes.number.isRequired,
 };
 
 function EnhancedTableToolbar(props) {
@@ -129,7 +134,7 @@ function EnhancedTableToolbar(props) {
         </Typography>
       ) : (
         <Typography sx={{ flex: '1 1 100%' }} variant="h6" id="tableTitle" component="div">
-          TOOLS
+          DRESS
         </Typography>
       )}
 
@@ -154,9 +159,9 @@ EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
 };
 
-export default function Itemwisetool() {
+export default function Upcoming30daysdress() {
   const [order, setOrder] = React.useState('asc');
-  const [orderBy, setOrderBy] = React.useState('empcode');
+  const [orderBy, setOrderBy] = React.useState('name');
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
@@ -165,15 +170,6 @@ export default function Itemwisetool() {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
     setOrderBy(property);
-  };
-
-  const handleSelectAllClick = (event) => {
-    if (event.target.checked) {
-      const newSelected = rows.map((n) => n.id);
-      setSelected(newSelected);
-      return;
-    }
-    setSelected([]);
   };
 
   const handleClick = (event, id) => {
@@ -189,7 +185,7 @@ export default function Itemwisetool() {
     } else if (selectedIndex > 0) {
       newSelected = newSelected.concat(
         selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1)
+        selected.slice(selectedIndex + 1),
       );
     }
     setSelected(newSelected);
@@ -213,55 +209,43 @@ export default function Itemwisetool() {
     () =>
       stableSort(rows, getComparator(order, orderBy)).slice(
         page * rowsPerPage,
-        page * rowsPerPage + rowsPerPage
+        page * rowsPerPage + rowsPerPage,
       ),
-    [order, orderBy, page, rowsPerPage]
+    [order, orderBy, page, rowsPerPage],
   );
 
   return (
-    <Box sx={{ width: '100%' ,display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center'}}>
-      <Paper sx={{ width: '100%', mb: 2 ,padding:5}}>
+    <Box sx={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '60vh'}}>
+      <Paper sx={{ width: '80%', mb: 2 }}>
         <EnhancedTableToolbar numSelected={selected.length} />
         <TableContainer>
-          <Table sx={{ minWidth: 730 }} aria-labelledby="tableTitle">
+          <Table aria-labelledby="tableTitle" size="medium">
             <EnhancedTableHead
-              numSelected={selected.length}
               order={order}
               orderBy={orderBy}
-              onSelectAllClick={handleSelectAllClick}
               onRequestSort={handleRequestSort}
-              rowCount={rows.length}
             />
             <TableBody>
-              {visibleRows.map((row, index) => {
-                const isItemSelected = isSelected(row.id);
-                const labelId = `enhanced-table-checkbox-${index}`;
-
-                return (
-                  <TableRow
-                    hover
-                    onClick={(event) => handleClick(event, row.id)}
-                    role="checkbox"
-                    aria-checked={isItemSelected}
-                    tabIndex={-1}
-                    key={row.id}
-                    selected={isItemSelected}
-                    sx={{ cursor: 'pointer' }}
-                  >
-                    {/* Remove the checkbox column */}
-                    <TableCell component="th" id={labelId} scope="row" padding="none">
-                      {row.empcode}
-                    </TableCell>
-                    <TableCell align="right">{row.empname}</TableCell>
-                    <TableCell align="right">{row.clampmeter}</TableCell>
-                    <TableCell align="right">{row.plier}</TableCell>
-                    <TableCell align="right">{row.hammer}</TableCell>
-                  </TableRow>
-                );
-              })}
+              {visibleRows.map((row, index) => (
+                <TableRow
+                  hover
+                  onClick={(event) => handleClick(event, row.id)}
+                  role="checkbox"
+                  aria-checked={isSelected(row.id)}
+                  tabIndex={-1}
+                  key={row.id}
+                  selected={isSelected(row.id)}
+                  sx={{ cursor: 'pointer' }}
+                >
+                  <TableCell component="th" scope="row" padding="4">
+                    {row.name}
+                  </TableCell>
+                  <TableCell align="right">{row.protein}</TableCell>
+                </TableRow>
+              ))}
               {emptyRows > 0 && (
                 <TableRow style={{ height: 53 * emptyRows }}>
-                  <TableCell colSpan={6} />
+                  <TableCell colSpan={2} />
                 </TableRow>
               )}
             </TableBody>

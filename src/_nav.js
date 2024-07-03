@@ -34,7 +34,7 @@ const _nav = [
     component: CNavItem,
     name: 'Safety Training',
     to: '/theme/colors',
-    icon: <CIcon icon={cilDrop} customClassName="nav-icon" />,
+    icon: <CIcon icon={cilPencil} customClassName="nav-icon" />,
   },
   {
     component: CNavItem,
@@ -61,17 +61,17 @@ const _nav = [
       {
         component: CNavItem,
         name: '15 days',
-        to: '/base/accordion',
+        to: '/upcoming15daysbody',
       },
       {
         component: CNavItem,
         name: '30 days',
-        to: '/base/breadcrumbs',
+        to: '/upcoming30daysbody',
       },
       {
         component: CNavItem,
         name: '45 days',
-        to: '/base/cards',
+        to: '/upcoming45daysbody',
       },
       // {
       //   component: CNavItem,
@@ -172,7 +172,7 @@ const _nav = [
       {
         component: CNavItem,
         name: 'Organization Wise',
-        to: '/aftersearchtool',
+        to: '/organizationalreportbody',
       },
     ],
   },
