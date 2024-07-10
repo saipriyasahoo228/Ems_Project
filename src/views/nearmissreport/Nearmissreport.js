@@ -25,7 +25,7 @@ function createData(id,slno,refrno,date) {
 }
 
 const rows = [
-  //createData(1,1,'21mmca60','5/3/20024'),
+  createData(1,1,'er54gd','2/4/2023'),
   // additional rows...
 ];
 
@@ -58,9 +58,12 @@ function stableSort(array, comparator) {
 }
 
 const headCells = [
-  { id: 'slno', numeric: true, disablePadding: false, label: 'SLNO.' },
+  { id: 'slno', numeric: false, disablePadding: true, label: 'SL NO.' },
+  // { id: 'behavioraltraining', numeric: true, disablePadding: false, label: 'BEHAVIORAL TRAINING' },
   { id: 'refrno', numeric: true, disablePadding: false, label: 'REFERENCE NUMBER' },
+  // { id: 'trainername', numeric: true, disablePadding: false, label: 'TRAINER NAME' },
   { id: 'date', numeric: true, disablePadding: false, label: 'DATE' },
+ 
 ];
 
 function EnhancedTableHead(props) {
@@ -126,7 +129,7 @@ function EnhancedTableToolbar(props) {
           {numSelected} selected
         </Typography>
       ) : (
-        <Typography sx={{ flex: '1 1 100%' ,textAlign:'center'}} variant="h6" id="tableTitle" component="div">
+        <Typography sx={{ flex: '1 1 100%' ,textAlign:'center' }} variant="h6" id="tableTitle" component="div">
           Nearmiss Report
         </Typography>
       )}
@@ -247,12 +250,13 @@ export default function Nearmissreport() {
                     sx={{ cursor: 'pointer' }}
                   >
                     {/* Remove the checkbox column */}
-                    <TableCell component="th" id={labelId} scope="row" padding="4">
+                    <TableCell component="th" id={labelId} scope="row" padding="none">
                       {row.slno}
                     </TableCell>
-                    <TableCell align="right">{row.refrno}</TableCell>
-                    <TableCell align="right">{row.date}</TableCell>
                     
+                    <TableCell align="right">{row.refrno}</TableCell>
+                    
+                    <TableCell align="right">{row.date}</TableCell>
                     
                   </TableRow>
                 );

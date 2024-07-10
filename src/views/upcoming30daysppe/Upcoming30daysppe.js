@@ -133,7 +133,7 @@ function EnhancedTableToolbar(props) {
           {numSelected} selected
         </Typography>
       ) : (
-        <Typography sx={{ flex: '1 1 100%' }} variant="h6" id="tableTitle" component="div">
+        <Typography sx={{ flex: '1 1 100%' ,textAlign:'center'}} variant="h6" id="tableTitle" component="div">
           PPE LIST
         </Typography>
       )}

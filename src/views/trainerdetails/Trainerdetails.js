@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import PropTypes from 'prop-types';
 import { alpha } from '@mui/material/styles';
 import Box from '@mui/material/Box';
@@ -16,26 +16,28 @@ import Paper from '@mui/material/Paper';
 import Checkbox from '@mui/material/Checkbox';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Switch from '@mui/material/Switch';
 import DeleteIcon from '@mui/icons-material/Delete';
 import FilterListIcon from '@mui/icons-material/FilterList';
+import EditIcon from '@mui/icons-material/Edit';
 import { visuallyHidden } from '@mui/utils';
+//import EditForm from '../editform/EditForm';
+import Trainerredit from '../editformtrainer/Trainerredit';
 
-function createData(id,slno,refrno,date) {
-  return { id,slno,refrno,date };
+
+function createData(id,trainer_id,company,trainer_name,email,phonenumber,address,joining_date,salary,is_active,profile_photo,job_title,specification) {
+  return { id, trainer_id,company,trainer_name,email,phonenumber,address,joining_date,salary,is_active,profile_photo,job_title,specification };
 }
 
-const rows = [
-  createData(1,1,'er54gd','2/4/2023'),
-  // additional rows...
+const initialRows = [
+  createData(1, '21mmca60', 'Novazen', 'xyz', 'xyz@gmail.com', '7890654326', 'bbsr', '4/4/2024',30000,'','','abc','bhg'),
+
 ];
 
 function descendingComparator(a, b, orderBy) {
-  if (b[orderBy] < a[orderBy]) {
-    return -1;
-  }
-  if (b[orderBy] > a[orderBy]) {
-    return 1;
-  }
+  if (b[orderBy] < a[orderBy]) return -1;
+  if (b[orderBy] > a[orderBy]) return 1;
   return 0;
 }
 
@@ -49,33 +51,45 @@ function stableSort(array, comparator) {
   const stabilizedThis = array.map((el, index) => [el, index]);
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
-    if (order !== 0) {
-      return order;
-    }
+    if (order !== 0) return order;
     return a[1] - b[1];
   });
   return stabilizedThis.map((el) => el[0]);
 }
 
 const headCells = [
-  { id: 'slno', numeric: false, disablePadding: true, label: 'SL NO.' },
-  // { id: 'behavioraltraining', numeric: true, disablePadding: false, label: 'BEHAVIORAL TRAINING' },
-  { id: 'refrno', numeric: true, disablePadding: false, label: 'REFERENCE NUMBER' },
-  // { id: 'trainername', numeric: true, disablePadding: false, label: 'TRAINER NAME' },
-  { id: 'date', numeric: true, disablePadding: false, label: 'DATE' },
- 
+  { id: 'trainer_id', numeric: false, disablePadding: true, label: 'Trainer_Id' },
+  { id: 'company', numeric: true, disablePadding: false, label: 'Company' },
+  { id: 'trainer_name', numeric: true, disablePadding: false, label: 'Trainer Name' },
+  { id: 'email', numeric: true, disablePadding: false, label: 'Email' },
+  { id: 'phonenumber', numeric: true, disablePadding: false, label: 'Phone Number' },
+  { id: 'address', numeric: true, disablePadding: false, label: 'Address' },
+  { id: 'joining_date', numeric: true, disablePadding: false, label: 'Joining Date' },
+  { id: 'salary',numeric:true,disablePadding:false,label:'Salary'},
+  { id: 'is_active', numeric: true, disablePadding: false, label: 'Is_Active' },
+  { id: 'profile_photo', numeric: true, disablePadding: false, label: 'Profile Photo' },
+  { id: 'job_title', numeric: true, disablePadding: false, label: 'Job Title' },
+  { id: 'specification',numeric:true,disablePadding:false,label:'Specification'},
+  { id: 'action',numeric:true,disablePadding:false,label:'Action'},
+
 ];
 
 function EnhancedTableHead(props) {
   const { onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } = props;
-  const createSortHandler = (property) => (event) => {
-    onRequestSort(event, property);
-  };
+  const createSortHandler = (property) => (event) => onRequestSort(event, property);
 
   return (
     <TableHead>
       <TableRow>
-        {/* Remove the checkbox column */}
+        <TableCell padding="checkbox">
+          <Checkbox
+            color="primary"
+            indeterminate={numSelected > 0 && numSelected < rowCount}
+            checked={rowCount > 0 && numSelected === rowCount}
+            onChange={onSelectAllClick}
+            inputProps={{ 'aria-label': 'select all desserts' }}
+          />
+        </TableCell>
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
@@ -108,11 +122,11 @@ EnhancedTableHead.propTypes = {
   onSelectAllClick: PropTypes.func.isRequired,
   order: PropTypes.oneOf(['asc', 'desc']).isRequired,
   orderBy: PropTypes.string.isRequired,
-  rowCount: PropTypes.number.isRequired,
+  rowCount: PropTypes.number.isRequired
 };
 
 function EnhancedTableToolbar(props) {
-  const { numSelected } = props;
+  const { numSelected, onDelete } = props;
 
   return (
     <Toolbar
@@ -120,8 +134,8 @@ function EnhancedTableToolbar(props) {
         pl: { sm: 2 },
         pr: { xs: 1, sm: 1 },
         ...(numSelected > 0 && {
-          bgcolor: (theme) => alpha(theme.palette.primary.main, theme.palette.action.activatedOpacity),
-        }),
+          bgcolor: (theme) => alpha(theme.palette.primary.main, theme.palette.action.activatedOpacity)
+        })
       }}
     >
       {numSelected > 0 ? (
@@ -129,14 +143,14 @@ function EnhancedTableToolbar(props) {
           {numSelected} selected
         </Typography>
       ) : (
-        <Typography sx={{ flex: '1 1 100%' ,textAlign:'center' }} variant="h6" id="tableTitle" component="div">
-          Accident Report
+        <Typography sx={{ flex: '1 1 100%' }} variant="h6" id="tableTitle" component="div">
+          Trainer Details
         </Typography>
       )}
 
       {numSelected > 0 ? (
         <Tooltip title="Delete">
-          <IconButton>
+          <IconButton onClick={onDelete}>
             <DeleteIcon />
           </IconButton>
         </Tooltip>
@@ -153,14 +167,19 @@ function EnhancedTableToolbar(props) {
 
 EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
+  onDelete: PropTypes.func.isRequired
 };
 
-export default function Accidentreport() {
+export default function Trainingdetails() {
   const [order, setOrder] = React.useState('asc');
-  const [orderBy, setOrderBy] = React.useState('empcode');
+  const [orderBy, setOrderBy] = React.useState('training_id');
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
+  const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [open, setOpen] = React.useState(false);
+  const [currentRow, setCurrentRow] = React.useState(null);
+  const [rows, setRows] = React.useState(initialRows);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -188,11 +207,9 @@ export default function Accidentreport() {
     } else if (selectedIndex === selected.length - 1) {
       newSelected = newSelected.concat(selected.slice(0, -1));
     } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1)
-      );
+      newSelected = newSelected.concat(selected.slice(0, selectedIndex), selected.slice(selectedIndex + 1));
     }
+
     setSelected(newSelected);
   };
 
@@ -205,26 +222,45 @@ export default function Accidentreport() {
     setPage(0);
   };
 
+  const handleChangeDense = (event) => {
+    setDense(event.target.checked);
+  };
+
   const isSelected = (id) => selected.indexOf(id) !== -1;
 
-  // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
   const visibleRows = React.useMemo(
     () =>
-      stableSort(rows, getComparator(order, orderBy)).slice(
-        page * rowsPerPage,
-        page * rowsPerPage + rowsPerPage
-      ),
-    [order, orderBy, page, rowsPerPage]
+      stableSort(rows, getComparator(order, orderBy)).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage),
+    [order, orderBy, page, rowsPerPage, rows]
   );
+
+  const handleClickOpen = (row) => {
+    setCurrentRow(row);
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleSave = () => {
+    // Handle save logic here (e.g., update the rows state with the edited row data)
+    setOpen(false);
+  };
+
+  const handleDelete = () => {
+    setRows((prevRows) => prevRows.filter((row) => !selected.includes(row.id)));
+    setSelected([]);
+  };
 
   return (
     <Box sx={{ width: '100%' }}>
-      <Paper sx={{ width: '100%', mb: 2 ,padding:5}}>
-        <EnhancedTableToolbar numSelected={selected.length} />
+      <Paper sx={{ width: '100%', mb: 2 }}>
+        <EnhancedTableToolbar numSelected={selected.length} onDelete={handleDelete} />
         <TableContainer>
-          <Table sx={{ minWidth: 730 }} aria-labelledby="tableTitle">
+          <Table sx={{ minWidth: 750 }} aria-labelledby="tableTitle" size={dense ? 'small' : 'medium'}>
             <EnhancedTableHead
               numSelected={selected.length}
               order={order}
@@ -249,20 +285,40 @@ export default function Accidentreport() {
                     selected={isItemSelected}
                     sx={{ cursor: 'pointer' }}
                   >
-                    {/* Remove the checkbox column */}
-                    <TableCell component="th" id={labelId} scope="row" padding="none">
-                      {row.slno}
+                    <TableCell padding="checkbox">
+                      <Checkbox
+                        color="primary"
+                        checked={isItemSelected}
+                        inputProps={{ 'aria-labelledby': labelId }}
+                      />
                     </TableCell>
-                    
-                    <TableCell align="right">{row.refrno}</TableCell>
-                    
-                    <TableCell align="right">{row.date}</TableCell>
-                    
+                    <TableCell component="th" id={labelId} scope="row" padding="none">
+                      {row.trainer_id}
+                    </TableCell>
+                    <TableCell align="right">{row.company}</TableCell>
+                    <TableCell align="right">{row.trainer_name}</TableCell>
+                    <TableCell align="right">{row.email}</TableCell>
+                    <TableCell align="right">{row.phonenumber}</TableCell>
+                    <TableCell align="right">{row.address}</TableCell>
+                    <TableCell align="right">{row.joining_date}</TableCell>
+                    <TableCell align="right">{row.salary}</TableCell>
+                    <TableCell align="right">{row.is_active}</TableCell>
+                    <TableCell align="right">{row.profile_photo}</TableCell>
+                    <TableCell align="right">{row.job_title}</TableCell>
+                    <TableCell align="right">{row.specification}</TableCell>
+
+                    <TableCell align="right">
+                      <Tooltip title="Edit">
+                        <IconButton color="primary" onClick={() => handleClickOpen(row)}>
+                          <EditIcon />
+                        </IconButton>
+                      </Tooltip>
+                    </TableCell>
                   </TableRow>
                 );
               })}
               {emptyRows > 0 && (
-                <TableRow style={{ height: 53 * emptyRows }}>
+                <TableRow style={{ height: (dense ? 33 : 53) * emptyRows }}>
                   <TableCell colSpan={6} />
                 </TableRow>
               )}
@@ -279,6 +335,15 @@ export default function Accidentreport() {
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Paper>
+      <FormControlLabel control={<Switch checked={dense} onChange={handleChangeDense} />} label="Dense padding" />
+
+      <Trainerredit
+        open={open}
+        handleClose={handleClose}
+        handleSave={handleSave}
+        currentRow={currentRow}
+        setCurrentRow={setCurrentRow}
+      />
     </Box>
   );
 }

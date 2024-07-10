@@ -1,4 +1,4 @@
-import { element } from 'prop-types'
+import { element, exact } from 'prop-types'
 import React from 'react'
 
 const Dashboard = React.lazy(() => import('./views/dashboard/Dashboard'))
@@ -13,6 +13,12 @@ const AfterSearchBody = React.lazy(() => import('./views/aftersearchbody/Afterse
 const upcoming15daysbody=React.lazy(()=>import('./views/upcoming15daysbody/Upcoming15daysbody'))
 const upcoming30daysbody=React.lazy(()=>import('./views/upcoming30daysbody/Upcoming30daysbody'))
 const upcoming45daysbody=React.lazy(()=>import('./views/upcoming45daysbody/Upcoming45daysbody'))
+const trainingdetails=React.lazy(()=>import('./views/trainingdetails/Trainingdetails'))
+const trainerdetails=React.lazy(()=>import('./views/trainerdetails/Trainerdetails'))
+const empregister=React.lazy(()=>import('./views/employeeregisterform/EmployeeRegister'))
+const newissuance=React.lazy(()=>import('./views/newissuance/Newissuance'))
+const safetytraining=React.lazy(()=>import('./views/safetytraining/Safetytraining'))
+const accidentform=React.lazy(()=>import('./views/accidentform/Accident'))
 // const Typography = React.lazy(() => import('./views/theme/typography/Typography'))
 
 // // Base
@@ -77,6 +83,12 @@ const routes = [
   {path:"/upcoming15daysbody",name:'upcoming15daysbody',element:upcoming15daysbody},
   {path:"/upcoming30daysbody",name:'upcoming30daysbody',element:upcoming30daysbody},
   {path:"/upcoming45daysbody",name:'upcoming45daysbody',element:upcoming45daysbody},
+  {path:"/trainingdetails",name:'trainingdetails',element:trainingdetails},
+  {path:"/trainerdetails",name:'trainerdetails',element:trainerdetails},
+  {path:"/empregister",name:'empregister',element:empregister},
+  {path:"/newissuance",name:'newissuance',element:newissuance},
+  {path:"/safetytraining",name:'safetytraining',element:safetytraining},
+  {path:"/accidentform/",name:'accidentform',element:accidentform},
   // { path: '/theme/typography', name: 'Typography', element: Typography },
   // { path: '/base', name: 'Base', element: Cards, exact: true },
   // { path: '/base/accordion', name: 'Accordion', element: Accordion },

@@ -33,19 +33,19 @@ const _nav = [
   {
     component: CNavItem,
     name: 'Safety Training',
-    to: '/theme/colors',
+    to: '/safetytraining',
     icon: <CIcon icon={cilPencil} customClassName="nav-icon" />,
   },
   {
     component: CNavItem,
     name: 'Accident Reporting',
-    to: '/theme/typography',
+    to: '/accidentform',
     icon: <CIcon icon={cilPencil} customClassName="nav-icon" />,
   },
   {
     component: CNavItem,
     name: 'New Issuance ',
-    to: '/theme/typography',
+    to: '/newissuance',
     icon: <CIcon icon={cilPencil} customClassName="nav-icon" />,
   },
   {
@@ -175,6 +175,24 @@ const _nav = [
         to: '/organizationalreportbody',
       },
     ],
+  },
+  {
+    component: CNavItem,
+    name: 'Training Details',
+    to: '/trainingdetails',
+    icon: <CIcon icon={cilPencil} customClassName="nav-icon" />,
+  },
+  {
+    component: CNavItem,
+    name: 'Trainer Details',
+    to: '/trainerdetails',
+    icon: <CIcon icon={cilPencil} customClassName="nav-icon" />,
+  },
+  {
+    component: CNavItem,
+    name: 'Emp Registration',
+    to: '/empregister',
+    icon: <CIcon icon={cilPencil} customClassName="nav-icon" />,
   },
   // {
   //   component: CNavGroup,
