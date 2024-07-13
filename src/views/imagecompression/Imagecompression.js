@@ -51,7 +51,7 @@ const Imagecompression = ({ setCompressedImageBase64 }) => {
         onChange={handleFileChange}
       />
       <label htmlFor="upload-button-file">
-        <Button variant="contained" component="span" sx={{ marginRight: 1 }}>
+        <Button variant="contained" component="span" sx={{ margin: 1 }}>
           Select Image
         </Button>
       </label>
@@ -60,6 +60,7 @@ const Imagecompression = ({ setCompressedImageBase64 }) => {
         color="primary"
         onClick={() => console.log('Image ready for upload')}
         disabled={!compressedFile}
+        sx={{margin:1}}
       >
         Upload Image
       </Button>

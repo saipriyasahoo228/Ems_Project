@@ -6,15 +6,16 @@ import { Delete as DeleteIcon, Add as AddIcon, Check as CheckIcon } from '@mui/i
 
 const Training = ({ onEmployeesChange }) => {
   const [rows, setRows] = useState([]);
+  const [whitelevel_id, setWhitelevel_id] = useState('cttc1234');
 
-  const fetchEmployeeName = async (employee_id) => {
+  const fetchEmployeeName = async (employee_id,whitelevel_id) => {
     try {
       const response = await fetch('http://192.168.0.166:8000/employee/name/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ employee_id })
+        body: JSON.stringify({ employee_id ,whitelevel_id})
       });
 
       const data = await response.json();
@@ -28,13 +29,14 @@ const Training = ({ onEmployeesChange }) => {
   useEffect(() => {
     // Pass the employee data to the parent component whenever rows change
     onEmployeesChange(rows.map(row => ({
-        employee: row.employee_id === '0' ? '' : row.employee_id,
-        employee_name: row.employee_id === '0' ? '' : row.employee_name,
-        name: row.employee_id === '0' ? row.name : '',
-        trainer_id: row.employee_id === '0' ? '' : row.employee_id,
-        trainer_name: row.employee_id === '0' ? '' : row.employee_name,
-        trainee_id: row.employee_id,
-        trainee_name: row.employee_name,
+      employee: row.employee_id === '0' ? '' : row.employee_id,
+      whitelevel_id,
+      employee_id: row.employee_id === '0' ? '' : row.employee_id,
+      employee_name: row.employee_id === '0' ? row.name : row.employee_name,
+      trainer_id: row.employee_id,
+      trainer_name: row.employee_id === '0' ? row.name : row.employee_name,
+      trainee_id: row.employee_id === '0' ? '' : row.employee_id,
+      trainee_name: row.employee_id === '0' ? '' : row.employee_name,
     })));
   }, [rows, onEmployeesChange]);
 
@@ -42,7 +44,7 @@ const Training = ({ onEmployeesChange }) => {
     const isLastRowFilled = rows.length === 0 || (rows[rows.length - 1].employee_id && (rows[rows.length - 1].employee_name || rows[rows.length - 1].name));
 
     if (isLastRowFilled) {
-      setRows([...rows, { employee_id: '', employee_name: '', name: '', error: false, manual: false }]);
+      setRows([...rows, { employee_id: '', whitelevel_id, employee_name: '', name: '', error: false, manual: false }]);
     } else {
       const updatedRows = [...rows];
       if (!rows[rows.length - 1].employee_id) {
@@ -96,7 +98,7 @@ const Training = ({ onEmployeesChange }) => {
       updatedRows[index].manual = true;
     } else {
       if (employee_id) {
-        const employee_name = await fetchEmployeeName(employee_id);
+        const employee_name = await fetchEmployeeName(employee_id,whitelevel_id);
         updatedRows[index].employee_name = employee_name;
       }
       updatedRows[index].manual = false;

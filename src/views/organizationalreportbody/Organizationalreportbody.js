@@ -4,6 +4,7 @@ import Toollist from "../toollist/Toollist";
 import Ppelist from "../ppelist/Ppelist";
 import Dresslist from "../dresslist/Dresslist";
 import Trainingreport from "../trainingreport/Trainingreport";
+import Accidentreportdashboard from "../accidentreportdashboard/Accidentreportdashboard";
 
 export default function Organizationalreportbody() {
     return (
@@ -22,6 +23,9 @@ export default function Organizationalreportbody() {
             <h2>Training Report</h2>
             <Box sx={{ width: '100%' }}>
                 <Trainingreport />
+            </Box>
+            <Box sx={{ width: '100%' }}>
+                <Accidentreportdashboard />
             </Box>
         </Box>
     );

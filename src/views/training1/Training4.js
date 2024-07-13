@@ -4,18 +4,19 @@ import {
 } from '@mui/material';
 import { Delete as DeleteIcon, Add as AddIcon, Check as CheckIcon } from '@mui/icons-material';
 
-const Training = ({ onEmployeesChange }) => {
+const Training = ({ whitelevel, onChange }) => {
   const [rows, setRows] = useState([]);
-  const [whitelevel_id, setWhitelevel_id] = useState('cttc1234');
+  const [whitelevel_id, setWhitelevel] = useState('cttc1234');
+  
 
-  const fetchEmployeeName = async (employee_id,whitelevel_id) => {
+  const fetchEmployeeName = async (employee_id) => {
     try {
       const response = await fetch('http://192.168.0.166:8000/employee/name/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ employee_id,whitelevel_id })
+        body: JSON.stringify({ employee_id,whitelevel_id})
       });
 
       const data = await response.json();
@@ -28,18 +29,27 @@ const Training = ({ onEmployeesChange }) => {
 
   useEffect(() => {
     // Pass the employee data to the parent component whenever rows change
-    onEmployeesChange(rows.map(row => ({
-        trainer_id: row.employee_id,
-        trainer_name: row.employee_name ,
-        whitelevel_id,
-        employee: row.employee_id === '0' ? '' : row.employee_id,
-        employee_name: row.employee_name,
+    onChange(rows.map(row => ({
+      employee_id: row.employee_id,
+      employee_name: row.employee_name,
+      whitelevel_id:whitelevel_id,
     })));
-  }, [rows, onEmployeesChange]);
+  }, [rows, onChange]);
 
   const handleAddRow = () => {
-    setRows([...rows, { employee_id: '',whitelevel_id:'', employee_name: '', error: false, manual: false }]);
+    // Check if the last row is empty before adding a new one
+    const lastRow = rows[rows.length - 1];
+    if (lastRow && lastRow.employee_id.trim() === '') {
+      alert('Please Fill The selected rows below..')
+      return; // Do not add a new row if the last row's employee_id is blank
+    }
+
+    const updatedRows = [...rows, { employee_id: '',whitelevel_id, employee_name: '', error: false }];
+    setRows(updatedRows);
   };
+
+
+  
 
   const handleDeleteRow = (index) => {
     const updatedRows = rows.filter((_, i) => i !== index);
@@ -49,45 +59,22 @@ const Training = ({ onEmployeesChange }) => {
   const handleInputChange = async (index, event) => {
     const { name, value } = event.target;
     const updatedRows = [...rows];
-    updatedRows[index][name] = value;
+    updatedRows[index][name] = value.trim(); // Trim whitespace from input
 
+    // Check for duplicates
     if (name === 'employee_id') {
-      if (value === '0') {
-        updatedRows[index].employee_name = '';
-        updatedRows[index].manual = true;
-        updatedRows[index].error = false;
-      } else {
-        const isDuplicate = updatedRows.some((row, i) => row.employee_id === value && i !== index);
-        updatedRows[index].error = isDuplicate;
-        if (!isDuplicate) {
-          // Fetch employee name only if it's not a duplicate and not '0'
-          const empName = await fetchEmployeeName(value);
-          updatedRows[index].employee_name = empName;
-          updatedRows[index].manual = false;
-        }
-      }
-    } else if (name === 'employee_name') {
-      updatedRows[index].manual = true; // Enable manual mode for employee_name
+      const isDuplicate = updatedRows.some((row, i) => row.employee_id === value && i !== index);
+      updatedRows[index].error = isDuplicate;
     }
 
     setRows(updatedRows);
-  };
 
-  const handleCheck = async (index) => {
-    const { employee_id } = rows[index];
-    const updatedRows = [...rows];
-
-    if (employee_id === '0') {
-      updatedRows[index].manual = true;
-    } else {
-      if (employee_id) {
-        const employee_name = await fetchEmployeeName(employee_id,whitelevel_id);
-        updatedRows[index].employee_name = employee_name;
-      }
-      updatedRows[index].manual = false;
+    // Fetch and update employee name on valid employee_id entry
+    if (name === 'employee_id' && !updatedRows[index].error && value.trim() !== '') {
+      const employee_name = await fetchEmployeeName(value);
+      updatedRows[index].employee_name = employee_name;
+      setRows(updatedRows);
     }
-
-    setRows(updatedRows);
   };
 
   return (
@@ -126,14 +113,14 @@ const Training = ({ onEmployeesChange }) => {
                     value={row.employee_name}
                     onChange={(event) => handleInputChange(index, event)}
                     fullWidth
-                    disabled={!row.manual} // Disable if not in manual mode
+                    disabled
                   />
                 </TableCell>
                 <TableCell>
                   <IconButton onClick={() => handleDeleteRow(index)}>
                     <DeleteIcon />
                   </IconButton>
-                  <IconButton onClick={() => handleCheck(index)}>
+                  <IconButton onClick={() => handleInputChange(index)}>
                     <CheckIcon />
                   </IconButton>
                 </TableCell>
@@ -150,7 +137,7 @@ const Training = ({ onEmployeesChange }) => {
         sx={{
           position: 'absolute',
           bottom: -18,
-          left: '47%',
+          left: '49%',
           transform: 'translateX(-50%)',
           boxShadow: 'none',
           zIndex: 1

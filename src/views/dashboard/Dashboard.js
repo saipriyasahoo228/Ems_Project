@@ -50,9 +50,12 @@ import avatar4 from 'src/assets/images/avatars/4.jpg'
 import avatar5 from 'src/assets/images/avatars/5.jpg'
 import avatar6 from 'src/assets/images/avatars/6.jpg'
 
-// import WidgetsBrand from '../widgets/WidgetsBrand'
-// import WidgetsDropdown from '../widgets/WidgetsDropdown'
-// import MainChart from './MainChart'
+ import WidgetsBrand from '../widgets/WidgetsBrand'
+ import WidgetsDropdown from '../widgets/WidgetsDropdown'
+//import MainChart from './MainChart'
+//import Trainingreport from '../trainingreport/Trainingreport'
+import Accidentreportdashboard from '../accidentreportdashboard/Accidentreportdashboard'
+//import Demo from '../demotestingtable/Demo'
 
 const Dashboard = () => {
   const progressExample = [
@@ -178,17 +181,20 @@ const Dashboard = () => {
 
   return (
     <>
-      {/* <WidgetsDropdown className="mb-4" /> */}
-      <CCard className="mb-4">
-        <CCardBody>
-          <CRow>
-            <CCol sm={5}>
+      <WidgetsDropdown className="mb-4" /> 
+      {/* <Trainingreport/> */}
+      <Accidentreportdashboard/>
+    {/* <Demo/>  */}
+      {/* <CCard className="mb-4"> */}
+        {/* <CCardBody> */}
+          {/* <CRow> */}
+            {/* <CCol sm={5}>
               <h4 id="traffic" className="card-title mb-0">
                 Traffic
               </h4>
               <div className="small text-body-secondary">January - July 2023</div>
-            </CCol>
-            <CCol sm={7} className="d-none d-md-block">
+            </CCol> */}
+            {/* <CCol sm={7} className="d-none d-md-block">
               <CButton color="primary" className="float-end">
                 <CIcon icon={cilCloudDownload} />
               </CButton>
@@ -204,12 +210,12 @@ const Dashboard = () => {
                   </CButton>
                 ))}
               </CButtonGroup>
-            </CCol>
-          </CRow>
-          {/* <MainChart /> */}
-        </CCardBody>
-        <CCardFooter>
-          <CRow
+            </CCol> */}
+          {/* </CRow> */}
+          {/* <MainChart />  */}
+        {/* </CCardBody> */}
+        {/* <CCardFooter> */}
+          {/* <CRow
             xs={{ cols: 1, gutter: 4 }}
             sm={{ cols: 2 }}
             lg={{ cols: 4 }}
@@ -230,18 +236,18 @@ const Dashboard = () => {
                 <CProgress thin className="mt-2" color={item.color} value={item.percent} />
               </CCol>
             ))}
-          </CRow>
-        </CCardFooter>
-      </CCard>
-      {/* <WidgetsBrand className="mb-4" withCharts /> */}
-      <CRow>
-        <CCol xs>
-          <CCard className="mb-4">
-            <CCardHeader>Traffic {' & '} Sales</CCardHeader>
-            <CCardBody>
-              <CRow>
-                <CCol xs={12} md={6} xl={6}>
-                  <CRow>
+          </CRow> */}
+        {/* </CCardFooter> */}
+      {/* </CCard> */}
+       {/* <WidgetsBrand className="mb-4" withCharts />  */}
+      {/* <CRow>
+        <CCol xs> */}
+          {/* <CCard className="mb-4"> */}
+            {/* <CCardHeader>Traffic {' & '} Sales</CCardHeader> */}
+            {/* <CCardBody> */}
+              {/* <CRow> */}
+                {/* <CCol xs={12} md={6} xl={6}> */}
+                  {/* <CRow>
                     <CCol xs={6}>
                       <div className="border-start border-start-4 border-start-info py-1 px-3">
                         <div className="text-body-secondary text-truncate small">New Clients</div>
@@ -256,9 +262,9 @@ const Dashboard = () => {
                         <div className="fs-5 fw-semibold">22,643</div>
                       </div>
                     </CCol>
-                  </CRow>
-                  <hr className="mt-0" />
-                  {progressGroupExample1.map((item, index) => (
+                  </CRow> */}
+                  {/* <hr className="mt-0" /> */}
+                  {/* {progressGroupExample1.map((item, index) => (
                     <div className="progress-group mb-4" key={index}>
                       <div className="progress-group-prepend">
                         <span className="text-body-secondary small">{item.title}</span>
@@ -268,10 +274,10 @@ const Dashboard = () => {
                         <CProgress thin color="danger" value={item.value2} />
                       </div>
                     </div>
-                  ))}
-                </CCol>
-                <CCol xs={12} md={6} xl={6}>
-                  <CRow>
+                  ))} */}
+                {/* </CCol> */}
+                {/* <CCol xs={12} md={6} xl={6}> */}
+                  {/* <CRow>
                     <CCol xs={6}>
                       <div className="border-start border-start-4 border-start-warning py-1 px-3 mb-3">
                         <div className="text-body-secondary text-truncate small">Pageviews</div>
@@ -284,11 +290,11 @@ const Dashboard = () => {
                         <div className="fs-5 fw-semibold">49,123</div>
                       </div>
                     </CCol>
-                  </CRow>
+                  </CRow> */}
 
-                  <hr className="mt-0" />
+                  {/* <hr className="mt-0" /> */}
 
-                  {progressGroupExample2.map((item, index) => (
+                  {/* {progressGroupExample2.map((item, index) => (
                     <div className="progress-group mb-4" key={index}>
                       <div className="progress-group-header">
                         <CIcon className="me-2" icon={item.icon} size="lg" />
@@ -299,11 +305,11 @@ const Dashboard = () => {
                         <CProgress thin color="warning" value={item.value} />
                       </div>
                     </div>
-                  ))}
+                  ))} */}
 
-                  <div className="mb-5"></div>
+                  {/* <div className="mb-5"></div> */}
 
-                  {progressGroupExample3.map((item, index) => (
+                  {/* {progressGroupExample3.map((item, index) => (
                     <div className="progress-group" key={index}>
                       <div className="progress-group-header">
                         <CIcon className="me-2" icon={item.icon} size="lg" />
@@ -317,13 +323,13 @@ const Dashboard = () => {
                         <CProgress thin color="success" value={item.percent} />
                       </div>
                     </div>
-                  ))}
-                </CCol>
-              </CRow>
+                  ))} */}
+                {/* </CCol> */}
+              {/* </CRow> */}
 
-              <br />
+              {/* <br /> */}
 
-              <CTable align="middle" className="mb-0 border" hover responsive>
+              {/* <CTable align="middle" className="mb-0 border" hover responsive>
                 <CTableHead className="text-nowrap">
                   <CTableRow>
                     <CTableHeaderCell className="bg-body-tertiary text-center">
@@ -375,11 +381,11 @@ const Dashboard = () => {
                     </CTableRow>
                   ))}
                 </CTableBody>
-              </CTable>
-            </CCardBody>
-          </CCard>
-        </CCol>
-      </CRow>
+              </CTable> */}
+            {/* </CCardBody> */}
+          {/* </CCard> */}
+        {/* </CCol>
+      </CRow> */}
     </>
   )
 }

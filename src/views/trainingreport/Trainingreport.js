@@ -21,8 +21,8 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
 
-function createData(id, name, protein) {
-  return { id, name, protein };
+function createData(id, name, number) {
+  return { id, name, number };
 }
 
 const rows = [
@@ -62,7 +62,7 @@ function stableSort(array, comparator) {
 
 const headCells = [
   { id: 'name', numeric: false, disablePadding: true, label: 'Training Name' },
-  { id: 'protein', numeric: true, disablePadding: false, label: 'Number' },
+  { id: 'number', numeric: true, disablePadding: false, label: 'Number' },
 ];
 
 function EnhancedTableHead(props) {
@@ -207,7 +207,7 @@ export default function Trainingreport() {
 
   return (
     <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '70vh'}}>
-      <Paper sx={{ width: '80%', mb: 2 }}>
+      <Paper sx={{ width: '100%', mb: 2 }}>
         <EnhancedTableToolbar numSelected={selected.length} />
         <TableContainer>
           <Table aria-labelledby="tableTitle" size="medium">
@@ -231,7 +231,7 @@ export default function Trainingreport() {
                   <TableCell component="th" scope="row" padding="4">
                     {row.name}
                   </TableCell>
-                  <TableCell align="right">{row.protein}</TableCell>
+                  <TableCell align="right">{row.number}</TableCell>
                 </TableRow>
               ))}
               {emptyRows > 0 && (

@@ -1,5 +1,5 @@
 import React, { Suspense, useEffect } from 'react';
-import { HashRouter, Route, Routes } from 'react-router-dom';
+import { HashRouter, Route, Routes, Navigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { CSpinner, useColorModes } from '@coreui/react';
 import './scss/style.scss';
@@ -14,7 +14,7 @@ const Page404 = React.lazy(() => import('./views/pages/page404/Page404'));
 const Page500 = React.lazy(() => import('./views/pages/page500/Page500'));
 
 // New Components
-//const Employeewisesearch = React.lazy(() => import('./views/pages/Employeewisesearch'));
+// const Employeewisesearch = React.lazy(() => import('./views/pages/Employeewisesearch'));
 // const AfterSearchBody = React.lazy(() => import('./views/aftersearchbody/Afterseachbody'));
 
 const App = () => {
@@ -45,12 +45,13 @@ const App = () => {
         }
       >
         <Routes>
-          <Route exact path="/login" name="Login Page" element={<Login />} />
-          <Route exact path="/register" name="Register Page" element={<Register />} />
-          <Route exact path="/404" name="Page 404" element={<Page404 />} />
-          <Route exact path="/500" name="Page 500" element={<Page500 />} />
-          {/* <Route exact path="/empsearch" name="Employee Search" element={<Employeewisesearch />} /> */}
-          {/* <Route exact path="/aftersearch" name="After Search" element={<AfterSearchBody />} /> */}
+          <Route path="/" element={<Navigate to="/login" />} />
+          <Route path="/login" name="Login Page" element={<Login />} />
+          <Route path="/register" name="Register Page" element={<Register />} />
+          <Route path="/404" name="Page 404" element={<Page404 />} />
+          <Route path="/500" name="Page 500" element={<Page500 />} />
+          {/* <Route path="/empsearch" name="Employee Search" element={<Employeewisesearch />} /> */}
+          {/* <Route path="/aftersearch" name="After Search" element={<AfterSearchBody />} /> */}
           <Route path="*" name="Home" element={<DefaultLayout />} />
         </Routes>
       </Suspense>

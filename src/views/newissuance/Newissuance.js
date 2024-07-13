@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import Training from '../trainingcomponent/Training';
+import Training4 from '../training1/Training4';
 import {
-  Box, Typography, TextField, FormControlLabel, FormControl, Card, CardContent, Divider, Grid, Checkbox, Button, MenuItem, Select, InputLabel
+  Box, Typography, TextField, FormControlLabel, FormControl, Card, CardContent, Divider, Grid, Checkbox, Button, Backdrop, CircularProgress
 } from '@mui/material';
 import Imagecompression from '../imagecompression/Imagecompression';
 
@@ -19,6 +19,8 @@ const Newissuance = () => {
   const [white_level_id, setDropdownValue] = useState('cttc1234');
   const [compressedImageBase64, setCompressedImageBase64] = useState('');
   const [employees, setEmployees] = useState([]);
+  const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false); // Loading state
 
   const handleTrainingTypeChange = (event) => {
     const { name, checked } = event.target;
@@ -56,41 +58,52 @@ const Newissuance = () => {
   const handleEmployeesChange = (employeeDetails) => {
     setEmployees(employeeDetails);
   };
-  // const items = [
-  //   ...toolDetails.map(tool => ({ item: tool.item, item_type: 1 })),
-  //   ...ppeDetails.map(ppe => ({ item: ppe.item, item_type: 2 })),
-  //   ...dressDetails.map(dress => ({ item: dress.item, item_type: 3 })),
-  // ];
 
+  const validateForm = () => {
+    let formErrors = {};
 
-  // const formData = {
-  //   issuance_id,
-  //   issuance_date,
-  //   white_level_id,
-  //   items,
-  //   employees,
-  //   accident_image: compressedImageBase64,
+    if (!issuance_date) formErrors.issuance_date = 'Issuance date is required';
+    if (!issuance_id) formErrors.issuance_id = 'Reference number is required';
+    if (issuedThings.TOOLS && toolDetails.length === 0) formErrors.tools = 'At least one tool must be selected';
+    if (issuedThings.PPE && ppeDetails.length === 0) formErrors.ppe = 'At least one PPE must be selected';
+    if (issuedThings.DRESS && dressDetails.length === 0) formErrors.dress = 'At least one dress must be selected';
+    if (employees.length === 0) formErrors.employees = 'Employee details are required';
+    if (!compressedImageBase64) formErrors.accident_image = 'Accident image is required';
 
-  // };
-  // console.log(formData);
+    setErrors(formErrors);
+    return Object.keys(formErrors).length === 0;
+  };
 
   const handleSubmit = async () => {
-    const items = [
-      ...toolDetails.map(tool => ({ item: tool.item, item_type: 1 })),
-      ...ppeDetails.map(ppe => ({ item: ppe.item, item_type: 2 })),
-      ...dressDetails.map(dress => ({ item: dress.item, item_type: 3 })),
+    if (!validateForm()) {
+      return;
+    }
+
+    setLoading(true); // Start loading
+
+    const issued_things = [
+      ...toolDetails.map(tool => ({ item: tool.item })),
+      ...ppeDetails.map(ppe => ({ item: ppe.item })),
+      ...dressDetails.map(dress => ({ item: dress.item })),
     ];
 
     const formData = {
-      issuance_id,
-      issuance_date,
-      white_level_id,
-      items,
-      employees,
-      accident_image: compressedImageBase64,
-
+      issuance: {
+        issuance_id,
+        issuance_date,
+        white_level_id,
+        accident_image: compressedImageBase64,
+      },
+      issued_things,
+      employees: employees.map(({ employee_id, employee_name, whitelevel_id }) => ({
+        employee_id,
+        employee_name,
+        whitelevel_id
+      })),
     };
-    console.log(formData);
+
+    console.log('Submitting the following data:');
+    console.log(JSON.stringify(formData, null, 2));
 
     try {
       const response = await fetch('http://192.168.0.166:8000/item/new/', {
@@ -104,19 +117,27 @@ const Newissuance = () => {
       if (response.ok) {
         const result = await response.json();
         console.log('Data submitted successfully:', result);
-        // Optionally, you can clear the form here or show a success message
-        alert("New Issuance Successfully...")
+        alert('New Issuance Successfully submitted.');
+        // Optionally, you can clear the form fields here or show a success message
       } else {
-        console.error('Error submitting data:', response.statusText);
+        const errorData = await response.json(); // Read error response data
+        console.error('Error submitting data:', errorData);
+        alert(`Error submitting data: ${errorData.detail || 'Unknown error'}`);
       }
     } catch (error) {
-      console.error('Error submitting data:', error);
+      console.error('Network error:', error);
+      alert('Network error. Please try again.');
+    } finally {
+      setLoading(false); // Stop loading
     }
   };
 
   return (
     <Box className="section" sx={{ display: 'flex', justifyContent: 'center', padding: 4 }}>
-      <Card sx={{ width: '100%', maxWidth: 800, padding: 3, boxShadow: 3 }}>
+      <Backdrop sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }} open={loading}>
+        <CircularProgress color="inherit" />
+      </Backdrop>
+      <Card sx={{ width: '100%', maxWidth: 1500, padding: 3, boxShadow: 3 }}>
         <CardContent>
           <Grid container spacing={2} marginBottom={3}>
             <Grid item xs={12} sm={6}>
@@ -129,6 +150,8 @@ const Newissuance = () => {
                 }}
                 value={issuance_date}
                 onChange={(e) => setDate(e.target.value)}
+                error={!!errors.issuance_date}
+                helperText={errors.issuance_date}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -137,21 +160,11 @@ const Newissuance = () => {
                 fullWidth
                 value={issuance_id}
                 onChange={(e) => setReferenceNumber(e.target.value)}
+                error={!!errors.issuance_id}
+                helperText={errors.issuance_id}
               />
             </Grid>
           </Grid>
-          <FormControl fullWidth margin="normal">
-      <InputLabel id="white-level-id-label">White level id</InputLabel>
-      <Select
-        labelId="white-level-id-label"
-        id="white-level-id"
-        value={white_level_id}
-        onChange={handleDropdownChange}
-        label="White Level ID"
-      >
-        <MenuItem value="cttc1234">cttc1234</MenuItem>
-      </Select>
-    </FormControl>
           <Divider sx={{ marginBottom: 3 }} />
           <Typography variant="h6">Items:</Typography>
           <FormControlLabel
@@ -194,6 +207,7 @@ const Newissuance = () => {
                       checked={toolDetails.some(tool => tool.item === '3')}
                       onChange={(e) => handleDetailsChange(e, 'TOOLS')}
                       name="3"
+                      value="3"
                     />
                   }
                   label="Hammer"
@@ -204,6 +218,7 @@ const Newissuance = () => {
                       checked={toolDetails.some(tool => tool.item === '2')}
                       onChange={(e) => handleDetailsChange(e, 'TOOLS')}
                       name="2"
+                      value="2"
                     />
                   }
                   label="Plier"
@@ -214,12 +229,13 @@ const Newissuance = () => {
                       checked={toolDetails.some(tool => tool.item === '1')}
                       onChange={(e) => handleDetailsChange(e, 'TOOLS')}
                       name="1"
+                      value="1"
                     />
                   }
                   label="Clamp Meter"
                 />
               </FormControl>
-              
+              {errors.tools && <Typography color="error">{errors.tools}</Typography>}
             </Box>
           )}
           {issuedThings.PPE && (
@@ -232,6 +248,7 @@ const Newissuance = () => {
                       checked={ppeDetails.some(ppe => ppe.item === '4')}
                       onChange={(e) => handleDetailsChange(e, 'PPE')}
                       name="4"
+                      value="4"
                     />
                   }
                   label="Helmet"
@@ -242,6 +259,7 @@ const Newissuance = () => {
                       checked={ppeDetails.some(ppe => ppe.item === '5')}
                       onChange={(e) => handleDetailsChange(e, 'PPE')}
                       name="5"
+                      value="5"
                     />
                   }
                   label="Shoe"
@@ -252,11 +270,13 @@ const Newissuance = () => {
                       checked={ppeDetails.some(ppe => ppe.item === '6')}
                       onChange={(e) => handleDetailsChange(e, 'PPE')}
                       name="6"
+                      value="6"
                     />
                   }
                   label="Gloves"
                 />
               </FormControl>
+              {errors.ppe && <Typography color="error">{errors.ppe}</Typography>}
             </Box>
           )}
           {issuedThings.DRESS && (
@@ -269,6 +289,7 @@ const Newissuance = () => {
                       checked={dressDetails.some(dress => dress.item === '7')}
                       onChange={(e) => handleDetailsChange(e, 'DRESS')}
                       name="7"
+                      value="7"
                     />
                   }
                   label="Dress"
@@ -279,6 +300,7 @@ const Newissuance = () => {
                       checked={dressDetails.some(dress => dress.item === '8')}
                       onChange={(e) => handleDetailsChange(e, 'DRESS')}
                       name="8"
+                      value="8"
                     />
                   }
                   label="Jacket"
@@ -289,6 +311,7 @@ const Newissuance = () => {
                       checked={dressDetails.some(dress => dress.item === '9')}
                       onChange={(e) => handleDetailsChange(e, 'DRESS')}
                       name="9"
+                      value="9"
                     />
                   }
                   label="Reflecting Jacket"
@@ -299,24 +322,26 @@ const Newissuance = () => {
                       checked={dressDetails.some(dress => dress.item === '10')}
                       onChange={(e) => handleDetailsChange(e, 'DRESS')}
                       name="10"
+                      value="10"
                     />
                   }
                   label="Raincoat"
                 />
               </FormControl>
+              {errors.dress && <Typography color="error">{errors.dress}</Typography>}
             </Box>
           )}
           <Divider sx={{ marginBottom: 3 }} />
           <Box marginBottom={3}>
             <Typography variant="h6">EMPLOYEE DETAILS:</Typography>
-            <Training onEmployeesChange={handleEmployeesChange} />
+            <Training4 onChange={handleEmployeesChange} />
+            {errors.employees && <Typography color="error">{errors.employees}</Typography>}
           </Box>
-
           <Imagecompression setCompressedImageBase64={setCompressedImageBase64} />
+          {errors.accident_image && <Typography color="error">{errors.accident_image}</Typography>}
           <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: 3 }}>
             <Button variant="contained" color="primary" onClick={handleSubmit}>Submit</Button>
           </Box> 
-          
         </CardContent>
       </Card>
     </Box>
