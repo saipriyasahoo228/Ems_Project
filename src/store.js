@@ -3,6 +3,7 @@ import { legacy_createStore as createStore } from 'redux'
 const initialState = {
   sidebarShow: true,
   theme: 'light',
+  role: 'admin', // default role, change as per your logic
 }
 
 const changeState = (state = initialState, { type, ...rest }) => {

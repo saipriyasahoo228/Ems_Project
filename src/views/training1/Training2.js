@@ -8,14 +8,14 @@ const Training = ({ onEmployeesChange }) => {
   const [rows, setRows] = useState([]);
   const [whitelevel_id, setWhitelevel_id] = useState('cttc1234');
 
-  const fetchEmployeeName = async (employee_id,whitelevel_id) => {
+  const fetchEmployeeName = async (employee_id, whitelevel_id) => {
     try {
       const response = await fetch('http://192.168.0.166:8000/employee/name/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ employee_id ,whitelevel_id})
+        body: JSON.stringify({ employee_id, whitelevel_id })
       });
 
       const data = await response.json();
@@ -44,7 +44,7 @@ const Training = ({ onEmployeesChange }) => {
     const isLastRowFilled = rows.length === 0 || (rows[rows.length - 1].employee_id && (rows[rows.length - 1].employee_name || rows[rows.length - 1].name));
 
     if (isLastRowFilled) {
-      setRows([...rows, { employee_id: '', whitelevel_id, employee_name: '', name: '', error: false, manual: false }]);
+      setRows([...rows, { employee_id: '', whitelevel_id, employee_name: '', name: '', error: false, manual: false, employee_id_error: false, employee_name_error: false }]);
     } else {
       const updatedRows = [...rows];
       if (!rows[rows.length - 1].employee_id) {
@@ -77,7 +77,7 @@ const Training = ({ onEmployeesChange }) => {
         const isDuplicate = updatedRows.some((row, i) => row.employee_id === value && i !== index);
         updatedRows[index].error = isDuplicate;
         if (!isDuplicate) {
-          fetchEmployeeName(value).then(empName => {
+          fetchEmployeeName(value, whitelevel_id).then(empName => {
             updatedRows[index].employee_name = empName;
             updatedRows[index].manual = false;
             setRows(updatedRows);
@@ -98,7 +98,7 @@ const Training = ({ onEmployeesChange }) => {
       updatedRows[index].manual = true;
     } else {
       if (employee_id) {
-        const employee_name = await fetchEmployeeName(employee_id,whitelevel_id);
+        const employee_name = await fetchEmployeeName(employee_id, whitelevel_id);
         updatedRows[index].employee_name = employee_name;
       }
       updatedRows[index].manual = false;

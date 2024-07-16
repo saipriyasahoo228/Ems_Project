@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { alpha } from '@mui/material/styles';
 import Box from '@mui/material/Box';
@@ -15,11 +15,14 @@ import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Switch from '@mui/material/Switch';
 import DeleteIcon from '@mui/icons-material/Delete';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogActions from '@mui/material/DialogActions';
+import Button from '@mui/material/Button';
 
 function createData(id, name, protein) {
   return { id, name, protein };
@@ -29,17 +32,29 @@ const rows = [
   createData(1, 'Clamp Meter', 4),
   createData(2, 'Plier', 2),
   createData(3, 'Hammer', 6),
-//   createData(4, 'Frozen yoghurt', 4.0),
-//   createData(5, 'Gingerbread', 3.9),
-//   createData(6, 'Honeycomb', 6.5),
-//   createData(7, 'Ice cream sandwich', 4.3),
-//   createData(8, 'Jelly Bean', 0.0),
-//   createData(9, 'KitKat', 7.0),
-//   createData(10, 'Lollipop', 0.0),
-//   createData(11, 'Marshmallow', 2.0),
-//   createData(12, 'Nougat', 37.0),
-//   createData(13, 'Oreo', 4.0),
 ];
+
+// Predefined employee data (optional, can be dynamically generated)
+const predefinedEmployeeData = {
+  1: [
+    { empCode: 'E001', empName: 'John Doe' },
+    { empCode: 'E002', empName: 'Jane Smith' },
+    { empCode: 'E003', empName: 'Alice Johnson' },
+    { empCode: 'E004', empName: 'Bob Brown' }
+  ],
+  2: [
+    { empCode: 'E005', empName: 'Charlie Black' },
+    { empCode: 'E006', empName: 'Dana White' }
+  ],
+  3: [
+    { empCode: 'E007', empName: 'Evan King' },
+    { empCode: 'E008', empName: 'Fay Lee' },
+    { empCode: 'E009', empName: 'Gina Ray' },
+    { empCode: 'E010', empName: 'Hank Ford' },
+    { empCode: 'E011', empName: 'Ivy Kim' },
+    { empCode: 'E012', empName: 'Jackie Chan' }
+  ]
+};
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -133,7 +148,7 @@ function EnhancedTableToolbar(props) {
           {numSelected} selected
         </Typography>
       ) : (
-        <Typography sx={{ flex: '1 1 100%' ,textAlign:'center'}} variant="h6" id="tableTitle" component="div">
+        <Typography sx={{ flex: '1 1 100%', textAlign: 'center' }} variant="h6" id="tableTitle" component="div">
           TOOL LIST
         </Typography>
       )}
@@ -160,11 +175,13 @@ EnhancedTableToolbar.propTypes = {
 };
 
 export default function Upcoming15daystool() {
-  const [order, setOrder] = React.useState('asc');
-  const [orderBy, setOrderBy] = React.useState('name');
-  const [selected, setSelected] = React.useState([]);
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [order, setOrder] = useState('asc');
+  const [orderBy, setOrderBy] = useState('name');
+  const [selected, setSelected] = useState([]);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [selectedRow, setSelectedRow] = useState([]);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -191,6 +208,20 @@ export default function Upcoming15daystool() {
     setSelected(newSelected);
   };
 
+  const handleNumberClick = (id, count) => {
+    const employees = predefinedEmployeeData[id] || Array.from({ length: count }, (_, i) => ({
+      empCode: `E${String(i + 1).padStart(3, '0')}`,
+      empName: `Employee ${i + 1}`
+    }));
+    setSelectedRow(employees);
+    setDialogOpen(true);
+  };
+
+  const handleClose = () => {
+    setDialogOpen(false);
+    setSelectedRow([]);
+  };
+
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -202,10 +233,9 @@ export default function Upcoming15daystool() {
 
   const isSelected = (id) => selected.indexOf(id) !== -1;
 
-  // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
-  const visibleRows = React.useMemo(
+  const visibleRows = useMemo(
     () =>
       stableSort(rows, getComparator(order, orderBy)).slice(
         page * rowsPerPage,
@@ -215,7 +245,7 @@ export default function Upcoming15daystool() {
   );
 
   return (
-    <Box sx={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '60vh'  }}>
+    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '60vh' }}>
       <Paper sx={{ width: '80%', mb: 2 }}>
         <EnhancedTableToolbar numSelected={selected.length} />
         <TableContainer>
@@ -235,12 +265,14 @@ export default function Upcoming15daystool() {
                   tabIndex={-1}
                   key={row.id}
                   selected={isSelected(row.id)}
-                  sx={{ cursor: 'pointer'}}
+                  sx={{ cursor: 'pointer' }}
                 >
                   <TableCell component="th" scope="row" padding="4">
                     {row.name}
                   </TableCell>
-                  <TableCell align="right">{row.protein}</TableCell>
+                  <TableCell align="right" onClick={() => handleNumberClick(row.id, row.protein)}>
+                    {row.protein}
+                  </TableCell>
                 </TableRow>
               ))}
               {emptyRows > 0 && (
@@ -261,6 +293,35 @@ export default function Upcoming15daystool() {
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Paper>
+
+      <Dialog open={dialogOpen} onClose={handleClose}>
+        <DialogTitle>Employee Details</DialogTitle>
+        <DialogContent>
+          <TableContainer>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Employee Code</TableCell>
+                  <TableCell>Employee Name</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {selectedRow.map((employee) => (
+                  <TableRow key={employee.empCode}>
+                    <TableCell>{employee.empCode}</TableCell>
+                    <TableCell>{employee.empName}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} color="primary">
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 }
