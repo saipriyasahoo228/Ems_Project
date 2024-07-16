@@ -28,7 +28,7 @@ import {
 import { AppBreadcrumb } from './index'
 import { AppHeaderDropdown } from './header/index'
 
-const AppHeader = () => {
+const AppHeader1 = () => {
   const headerRef = useRef()
   const { colorMode, setColorMode } = useColorModes('coreui-free-react-admin-template-theme')
 
@@ -81,7 +81,7 @@ const AppHeader = () => {
             </CNavLink>
           </CNavItem>
         </CHeaderNav> */}
-        <h1>Industrial Safety Management System</h1>
+        <h1>Welcome User</h1>
         <CHeaderNav>
           <li className="nav-item py-1">
             <div className="vr h-100 mx-2 text-body text-opacity-75"></div>
@@ -139,4 +139,4 @@ const AppHeader = () => {
   )
 }
 
-export default AppHeader
+export default AppHeader1

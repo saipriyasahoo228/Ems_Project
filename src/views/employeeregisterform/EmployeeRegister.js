@@ -11,6 +11,7 @@ import {
   CButton,
   CRow,
   CFormSelect,
+  CSpinner,
 } from '@coreui/react';
 
 const EmployeeRegister = () => {
@@ -33,12 +34,13 @@ const EmployeeRegister = () => {
   const [phoneNumberError, setPhoneNumberError] = useState('');
   const [addressError, setAddressError] = useState('');
 
+  // State variable for loading
+  const [loading, setLoading] = useState(false);
+
   // Regular expressions for validation
   const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const phonePattern = /^[0-9]{10}$/;
-  //const addressPattern = /^[A-Za-z0-9, -]+$/;
   const addressPattern = /^[A-Za-z0-9, -]{10,}$/;
-
 
   // Event handlers for input changes
   const handleWhiteLevelIdChange = (e) => {
@@ -137,9 +139,9 @@ const EmployeeRegister = () => {
     const isPhoneNumberValid = validatePhoneNumber();
     const isAddressValid = validateAddress();
 
-    // if (isWhiteLevelIdValid && isEmployeeIdValid && isEmployeeNameValid && isEmailValid && isPhoneNumberValid && isAddressValid) {
+    if (isWhiteLevelIdValid && isEmployeeIdValid && isEmployeeNameValid && isEmailValid && isPhoneNumberValid && isAddressValid) {
+      setLoading(true); // Show loader
       let formData = {
-        
         employee_id,
         employee_name,
         email,
@@ -170,7 +172,16 @@ const EmployeeRegister = () => {
         const data = await response.json();
         console.log('Success:', data);
         alert('Registration successful!');
-        //navigate('/login'); // Navigate to success page
+        navigate('/login'); // Navigate to success page
+
+        // Reset form fields after successful submission
+        setWhiteLevelId('cttc1234');
+        setEmployeeId('');
+        setEmployeeName('');
+        setEmail('');
+        setPhoneNumber('');
+        setAddress('');
+        setRole('1');
       } catch (error) {
         if (error.name === 'TypeError') {
           console.error('Network error: Please check if the server is running and accessible.');
@@ -178,9 +189,11 @@ const EmployeeRegister = () => {
           console.error('Error:', error);
         }
         alert(`Error: ${error.message}`);
+      } finally {
+        setLoading(false); // Hide loader
       }
-    };
-  // };
+    }
+  };
 
   return (
     <form onSubmit={handleSubmit}>
@@ -281,8 +294,8 @@ const EmployeeRegister = () => {
                 <CFormLabel htmlFor="role">Select Role</CFormLabel>
               </CFormFloating>
               <div style={{ textAlign: 'center' }}>
-                <CButton type="submit" color="primary" shape="rounded-pill">
-                  Submit
+                <CButton type="submit" color="primary" shape="rounded-pill" disabled={loading}>
+                  {loading ? <CSpinner size="sm" /> : 'Submit'}
                 </CButton>
               </div>
             </CCardBody>

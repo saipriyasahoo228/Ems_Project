@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Training2 from '../training1/Training2';
 import {
   Box, Typography, TextField, RadioGroup, FormControlLabel, Radio, FormControl, Card, CardContent, Divider, Grid, Button, InputLabel, Select,
-  MenuItem, Container, CircularProgress, Backdrop, Alert,
+  MenuItem, Container, CircularProgress, Backdrop, Alert, AlertTitle,
 } from '@mui/material';
 import Imagecompression from '../imagecompression/Imagecompression';
 
@@ -44,6 +44,20 @@ const Safetytraining = () => {
 
   const handleTrainingIdChange = (event) => {
     setTraining_id(event.target.value);
+  };
+
+  const resetForm = () => {
+    setWhitelevel_id('cttc1234');
+    setTraining_date('');
+    setTraining_id('');
+    setTraining_type('1');
+    setTraining_name('');
+    setShowOtherTrainingField(false);
+    setTrainers([]);
+    setTrainees([]);
+    setCompressedImageBase64('');
+    setIsLoading(false);
+    setError('');
   };
 
   const today = new Date().toISOString().split('T')[0]; // Get today's date in YYYY-MM-DD format
@@ -163,36 +177,6 @@ const Safetytraining = () => {
                     onChange={handleTrainingIdChange}
                   />
                 </Grid>
-                {/* <Grid item xs={12} sm={4}>
-                  <FormControl fullWidth>
-                    <InputLabel id="whiteLevelIdLabel">Company Registration Number</InputLabel>
-                    <Select
-                      labelId="whiteLevelIdLabel"
-                      id="whiteLevelId"
-                      value={whitelevel_id}
-                      label="Company Registration Number"
-                      onChange={handleWhiteLevelIdChange}
-                    >
-                      <MenuItem value="cttc1234">cttc1234</MenuItem>
-                    
-                    </Select>
-                  </FormControl>
-                </Grid> */}
-                {/* <Grid item xs={12} sm={4}>
-                  <FormControl fullWidth>
-                    <InputLabel id="whiteLevelIdLabel">Company Registration Number</InputLabel>
-                    <Select
-                      labelId="whiteLevelIdLabel"
-                      id="whiteLevelId"
-                      value={whitelevel_id}
-                      label="Company Registration Number"
-                      onChange={handleWhiteLevelIdChange}
-                    >
-                      <MenuItem value="cttc1234">cttc1234</MenuItem>
-                      {/* Add other MenuItem options here if needed 
-                    </Select>
-                  </FormControl>
-                </Grid> */}
                 <Grid item xs={12}>
                   <Divider sx={{ marginBottom: 3 }} />
                   <Typography variant="h6" sx={{ marginBottom: 1 }}>Training Type:</Typography>
@@ -225,7 +209,16 @@ const Safetytraining = () => {
                 </Grid>
                 <Grid item xs={12}>
                   {error && (
-                    <Alert severity="error" sx={{ mb: 2 }}>
+                    <Alert
+                      severity="error"
+                      sx={{ mb: 2 }}
+                      action={
+                        <Button color="inherit" size="small" onClick={resetForm}>
+                          OK
+                        </Button>
+                      }
+                    >
+                      <AlertTitle>Error</AlertTitle>
                       {error}
                     </Alert>
                   )}
