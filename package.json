@@ -9,10 +9,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:coreui/coreui-free-react-admin-template.git"
+    "url":"git@github.com:saipriyasahoo228/Ems-Project.git"
   },
   "license": "MIT",
-  "author": "The CoreUI Team (https://github.com/orgs/coreui/people)",
+  "author":  "Saipriya Sahoo (https://github.com/saipriyasahoo228)",
   "scripts": {
      "predeploy": "npm run build",
     "deploy": "gh-pages -d build",
