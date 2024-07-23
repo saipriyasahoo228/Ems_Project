@@ -15,12 +15,12 @@ import {
 } from '@coreui/icons'
 import { CNavGroup, CNavItem, CNavTitle } from '@coreui/react'
 
-const _nav = [
+const _nav1 = [
   {
     component: CNavItem,
     name: 'Ems',
     to: '/EMS',
-    icon: <CIcon icon={cilSpeedometer} customClassName="nav-icon" />,
+    //icon: <CIcon icon={cilSpeedometer} customClassName="nav-icon" />,
     badge: {
       color: 'info',
       text: 'NEW',
@@ -49,30 +49,36 @@ const _nav = [
     icon: <CIcon icon={cilPencil} customClassName="nav-icon" />,
   },
   {
-    component: CNavTitle,
-    name: 'Components',
+    component: CNavItem,
+    name: 'Medical Check UP ',
+    to: '/medicalCheckUp',
+    icon: <CIcon icon={cilPencil} customClassName="nav-icon" />,
   },
-  {
-    component: CNavGroup,
-    name: 'Upcoming Issuance',
-    to: '/base',
-    icon: <CIcon icon={cilPuzzle} customClassName="nav-icon" />,
-    items: [
-      {
-        component: CNavItem,
-        name: '15 days',
-        to: '/upcoming15daysbody',
-      },
-      {
-        component: CNavItem,
-        name: '30 days',
-        to: '/upcoming30daysbody',
-      },
-      {
-        component: CNavItem,
-        name: '45 days',
-        to: '/upcoming45daysbody',
-      },
+  // {
+  //   component: CNavTitle,
+  //   name: 'Components',
+  // },
+  // {
+  //   component: CNavGroup,
+  //   name: 'Upcoming Issuance',
+  //   to: '/base',
+  //   icon: <CIcon icon={cilPuzzle} customClassName="nav-icon" />,
+  //   items: [
+  //     {
+  //       component: CNavItem,
+  //       name: '15 days',
+  //       to: '/upcoming15daysbody',
+  //     },
+  //     {
+  //       component: CNavItem,
+  //       name: '30 days',
+  //       to: '/upcoming30daysbody',
+  //     },
+  //     {
+  //       component: CNavItem,
+  //       name: '45 days',
+  //       to: '/upcoming45daysbody',
+  //     },
       // {
       //   component: CNavItem,
       //   name: 'Carousel',
@@ -133,8 +139,8 @@ const _nav = [
       //   name: 'Tooltips',
       //   to: '/base/tooltips',
       // },
-    ],
-  },
+  //   ],
+  // },
 //   {
 //     component: CNavGroup,
 //     name: 'Reports',
@@ -314,33 +320,33 @@ const _nav = [
   //   component: CNavTitle,
   //   name: 'Extras',
   // },
-  {
-    component: CNavGroup,
-    name: 'Pages',
-    icon: <CIcon icon={cilStar} customClassName="nav-icon" />,
-    items: [
-      {
-        component: CNavItem,
-        name: 'Login',
-        to: '/login',
-      },
-      {
-        component: CNavItem,
-        name: 'Register',
-        to: '/register',
-      },
-      {
-        component: CNavItem,
-        name: 'Error 404',
-        to: '/404',
-      },
-      {
-        component: CNavItem,
-        name: 'Error 500',
-        to: '/500',
-      },
-    ],
-  },
+  // {
+  //   component: CNavGroup,
+  //   name: 'Pages',
+  //   icon: <CIcon icon={cilStar} customClassName="nav-icon" />,
+  //   items: [
+  //     {
+  //       component: CNavItem,
+  //       name: 'Login',
+  //       to: '/login',
+  //     },
+  //     {
+  //       component: CNavItem,
+  //       name: 'Register',
+  //       to: '/register',
+  //     },
+  //     {
+  //       component: CNavItem,
+  //       name: 'Error 404',
+  //       to: '/404',
+  //     },
+  //     {
+  //       component: CNavItem,
+  //       name: 'Error 500',
+  //       to: '/500',
+  //     },
+  //   ],
+  // },
 //   {
 //     component: CNavItem,
 //     name: 'Docs',
@@ -349,4 +355,4 @@ const _nav = [
 //   },
  ]
 
-export default _nav
+export default _nav1

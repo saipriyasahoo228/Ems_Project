@@ -15,11 +15,12 @@ import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Switch from '@mui/material/Switch';
 import DeleteIcon from '@mui/icons-material/Delete';
 import FilterListIcon from '@mui/icons-material/FilterList';
+import DownloadIcon from '@mui/icons-material/Download'; // Import DownloadIcon
 import { visuallyHidden } from '@mui/utils';
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
 
 function createData(id, name, number) {
   return { id, name, number };
@@ -29,7 +30,7 @@ const rows = [
   createData(1, 'Tool Box Training', 4),
   createData(2, 'Job Safety Training', 2),
   createData(3, 'Behavioral Training', 6),
-  createData(4,'Other Training',2)
+  createData(4, 'Other Training', 2),
 ];
 
 function descendingComparator(a, b, orderBy) {
@@ -107,7 +108,7 @@ EnhancedTableHead.propTypes = {
 };
 
 function EnhancedTableToolbar(props) {
-  const { numSelected } = props;
+  const { numSelected, onDownload } = props;
 
   return (
     <Toolbar
@@ -136,11 +137,18 @@ function EnhancedTableToolbar(props) {
           </IconButton>
         </Tooltip>
       ) : (
-        <Tooltip title="Filter list">
-          <IconButton>
-            <FilterListIcon />
-          </IconButton>
-        </Tooltip>
+        <>
+          <Tooltip title="Filter list">
+            <IconButton>
+              <FilterListIcon />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Download">
+            <IconButton onClick={onDownload}>
+              <DownloadIcon />
+            </IconButton>
+          </Tooltip>
+        </>
       )}
     </Toolbar>
   );
@@ -148,6 +156,7 @@ function EnhancedTableToolbar(props) {
 
 EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
+  onDownload: PropTypes.func.isRequired,
 };
 
 export default function Trainingreport() {
@@ -205,10 +214,20 @@ export default function Trainingreport() {
     [order, orderBy, page, rowsPerPage],
   );
 
+  const handleDownload = () => {
+    const doc = new jsPDF();
+    doc.text('Training Report', 10, 10);
+    doc.autoTable({
+      head: [['Training Name', 'Number']],
+      body: rows.map(row => [row.name, row.number]),
+    });
+    doc.save('TrainingReport.pdf');
+  };
+
   return (
     <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '70vh'}}>
       <Paper sx={{ width: '100%', mb: 2 }}>
-        <EnhancedTableToolbar numSelected={selected.length} />
+        <EnhancedTableToolbar numSelected={selected.length} onDownload={handleDownload} />
         <TableContainer>
           <Table aria-labelledby="tableTitle" size="medium">
             <EnhancedTableHead

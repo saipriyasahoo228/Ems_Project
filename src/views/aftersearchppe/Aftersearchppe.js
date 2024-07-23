@@ -13,19 +13,21 @@ import TableSortLabel from '@mui/material/TableSortLabel';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
-import Checkbox from '@mui/material/Checkbox';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import DeleteIcon from '@mui/icons-material/Delete';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
+import jsPDF from 'jspdf'; // Import jsPDF
+import 'jspdf-autotable'; // Import jsPDF autotable plugin
+import DownloadIcon from '@mui/icons-material/Download';
 
-function createData(id,slno,ppelist,issuedate,nextissue) {
-  return { id,slno,ppelist,issuedate,nextissue };
+function createData(id, slno, ppelist, issuedate, nextissue) {
+  return { id, slno, ppelist, issuedate, nextissue };
 }
 
 const rows = [
-  createData(1,'21mmca60','Helmet','5/3/20024','5/8/2024'),
+  createData(1, '21mmca60', 'Helmet', '5/3/2024', '5/8/2024'),
   // additional rows...
 ];
 
@@ -62,7 +64,6 @@ const headCells = [
   { id: 'ppelist', numeric: true, disablePadding: false, label: 'PPE LIST' },
   { id: 'issuedate', numeric: true, disablePadding: false, label: 'ISSUED DATE' },
   { id: 'nextissue', numeric: true, disablePadding: false, label: 'NEXT ISSUANCE' },
- 
 ];
 
 function EnhancedTableHead(props) {
@@ -74,7 +75,6 @@ function EnhancedTableHead(props) {
   return (
     <TableHead>
       <TableRow>
-        {/* Remove the checkbox column */}
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
@@ -111,7 +111,7 @@ EnhancedTableHead.propTypes = {
 };
 
 function EnhancedTableToolbar(props) {
-  const { numSelected } = props;
+  const { numSelected, onPdfDownload } = props;
 
   return (
     <Toolbar
@@ -133,30 +133,40 @@ function EnhancedTableToolbar(props) {
         </Typography>
       )}
 
-      {numSelected > 0 ? (
-        <Tooltip title="Delete">
-          <IconButton>
-            <DeleteIcon />
-          </IconButton>
-        </Tooltip>
-      ) : (
-        <Tooltip title="Filter list">
-          <IconButton>
-            <FilterListIcon />
-          </IconButton>
-        </Tooltip>
-      )}
+      <Box sx={{ flex: 1, display: 'flex', justifyContent: 'flex-end' }}>
+        {numSelected > 0 ? (
+          <Tooltip title="Delete">
+            <IconButton>
+              <DeleteIcon />
+            </IconButton>
+          </Tooltip>
+        ) : (
+          <>
+            <Tooltip title="Download PDF">
+              <IconButton onClick={onPdfDownload}>
+                <DownloadIcon />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Filter list">
+              <IconButton>
+                <FilterListIcon />
+              </IconButton>
+            </Tooltip>
+          </>
+        )}
+      </Box>
     </Toolbar>
   );
 }
 
 EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
+  onPdfDownload: PropTypes.func.isRequired, // Add this line
 };
 
 export default function Aftersearchtool() {
   const [order, setOrder] = React.useState('asc');
-  const [orderBy, setOrderBy] = React.useState('empcode');
+  const [orderBy, setOrderBy] = React.useState('slno');
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
@@ -218,18 +228,28 @@ export default function Aftersearchtool() {
     [order, orderBy, page, rowsPerPage]
   );
 
+  // Function to handle PDF download
+  const handlePdfDownload = () => {
+    const doc = new jsPDF();
+    doc.autoTable({
+      head: [['SL NO.', 'PPE LIST', 'ISSUED DATE', 'NEXT ISSUANCE']],
+      body: rows.map((row) => [row.slno, row.ppelist, row.issuedate, row.nextissue]),
+    });
+    doc.save('PPE_Report.pdf');
+  };
+
   return (
     <Box sx={{ width: '100%' }}>
-      <Paper sx={{ width: '100%', mb: 2 ,padding:5}}>
-        <EnhancedTableToolbar numSelected={selected.length} />
+      <Paper sx={{ width: '100%', mb: 2, padding: 5 }}>
+        <EnhancedTableToolbar numSelected={selected.length} onPdfDownload={handlePdfDownload} />
         <TableContainer>
-          <Table sx={{ minWidth: 730 }} aria-labelledby="tableTitle">
+          <Table sx={{ minWidth: 730 }} aria-labelledby="tableTitle" size={'medium'}>
             <EnhancedTableHead
               numSelected={selected.length}
               order={order}
               orderBy={orderBy}
-              onSelectAllClick={handleSelectAllClick}
               onRequestSort={handleRequestSort}
+              onSelectAllClick={handleSelectAllClick}
               rowCount={rows.length}
             />
             <TableBody>
@@ -246,16 +266,18 @@ export default function Aftersearchtool() {
                     tabIndex={-1}
                     key={row.id}
                     selected={isItemSelected}
-                    sx={{ cursor: 'pointer' }}
                   >
-                    {/* Remove the checkbox column */}
+                    <TableCell padding="checkbox">
+                      <IconButton aria-label="details" onClick={() => console.log('Details clicked')}>
+                        {/* Add your action icon here */}
+                      </IconButton>
+                    </TableCell>
                     <TableCell component="th" id={labelId} scope="row" padding="none">
                       {row.slno}
                     </TableCell>
                     <TableCell align="right">{row.ppelist}</TableCell>
                     <TableCell align="right">{row.issuedate}</TableCell>
                     <TableCell align="right">{row.nextissue}</TableCell>
-                    
                   </TableRow>
                 );
               })}

@@ -19,6 +19,9 @@ const empregister=React.lazy(()=>import('./views/employeeregisterform/EmployeeRe
 const newissuance=React.lazy(()=>import('./views/newissuance/Newissuance'))
 const safetytraining=React.lazy(()=>import('./views/safetytraining/Safetytraining'))
 const accidentform=React.lazy(()=>import('./views/accidentform/Accident'))
+const medicalCheckUp=React.lazy(()=> import('./views/medicalCheckup/MedicalCheckUp'))
+
+// const Medical =React.lazy(() => import('./views/medicalCheckup/MedicalCheckUp'))
 // const Typography = React.lazy(() => import('./views/theme/typography/Typography'))
 
 // // Base
@@ -88,7 +91,10 @@ const routes = [
   {path:"/empregister",name:'empregister',element:empregister},
   {path:"/newissuance",name:'newissuance',element:newissuance},
   {path:"/safetytraining",name:'safetytraining',element:safetytraining},
+  {path:"/safetytrainingsafety",name:'safetytrainingsafety',element:safetytraining},
   {path:"/accidentform/",name:'accidentform',element:accidentform},
+  {path:"/medicalCheckUp",name:'medicalCheckUp',element:medicalCheckUp},
+  // {path:"/medical", name:"Medical Search", element:Medical}
   // { path: '/theme/typography', name: 'Typography', element: Typography },
   // { path: '/base', name: 'Base', element: Cards, exact: true },
   // { path: '/base/accordion', name: 'Accordion', element: Accordion },
@@ -133,3 +139,48 @@ const routes = [
 ]
 
 export default routes
+
+// routes.js
+
+// import React from 'react';
+// const Dashboard = React.lazy(() => import('./views/dashboard/Dashboard'));
+// const Colors = React.lazy(() => import('./views/theme/colors/Safety'));
+// const Itemwisetool = React.lazy(() => import('./views/itemwisetools/Itemwisetools'));
+// const Itemwiseppe = React.lazy(() => import('./views/itemwiseppe/Itemwiseppe'));
+// const Itemwisedress = React.lazy(() => import('./views/itemwisedress/Itemwisedress'));
+// const Employeewisesearch = React.lazy(() => import('./views/employeewisesearch/Employeewisesearch'));
+// const AfterSearchBody = React.lazy(() => import('./views/aftersearchbody/Afterseachbody'));
+// const Organizationalreportbody = React.lazy(() => import('./views/organizationalreportbody/Organizationalreportbody'));
+// const Upcoming15daysbody = React.lazy(() => import('./views/upcoming15daysbody/Upcoming15daysbody'));
+// const Upcoming30daysbody = React.lazy(() => import('./views/upcoming30daysbody/Upcoming30daysbody'));
+// const Upcoming45daysbody = React.lazy(() => import('./views/upcoming45daysbody/Upcoming45daysbody'));
+// const Trainingdetails = React.lazy(() => import('./views/trainingdetails/Trainingdetails'));
+// const Trainerdetails = React.lazy(() => import('./views/trainerdetails/Trainerdetails'));
+// const EmployeeRegister = React.lazy(() => import('./views/employeeregisterform/EmployeeRegister'));
+// const Newissuance = React.lazy(() => import('./views/newissuance/Newissuance'));
+// const Safetytraining = React.lazy(() => import('./views/safetytraining/Safetytraining'));
+// const Accident = React.lazy(() => import('./views/accidentform/Accident'));
+
+// const routes = [
+//   { path: '/', exact: true, name: 'Home' },
+//   { path: '/dashboard', name: 'Dashboard', element: <Dashboard /> },
+//   { path: '/theme/colors', name: 'Colors', element: <Colors /> },
+//   { path: '/itemwisetools', name: 'Itemwisetool', element: <Itemwisetool /> },
+//   { path: '/itemwiseppe', name: 'itemwiseppe', element: <Itemwiseppe /> },
+//   { path: '/itemwisedress', name: 'itemwisedress', element: <Itemwisedress /> },
+//   { path: '/employeewisesearch', name: 'employeewiseserach', element: <Employeewisesearch /> },
+//   { path: '/aftersearchbody', name: 'aftersearchbody', element: <AfterSearchBody /> },
+//   { path: '/organizationalreportbody', name: 'organizationalreportbody', element: <Organizationalreportbody /> },
+//   { path: '/upcoming15daysbody', name: 'upcoming15daysbody', element: <Upcoming15daysbody /> },
+//   { path: '/upcoming30daysbody', name: 'upcoming30daysbody', element: <Upcoming30daysbody /> },
+//   { path: '/upcoming45daysbody', name: 'upcoming45daysbody', element: <Upcoming45daysbody /> },
+//   { path: '/trainingdetails', name: 'trainingdetails', element: <Trainingdetails /> },
+//   { path: '/trainerdetails', name: 'trainerdetails', element: <Trainerdetails /> },
+//   { path: '/empregister', name: 'empregister', element: <EmployeeRegister /> },
+//   { path: '/newissuance', name: 'newissuance', element: <Newissuance /> },
+//   { path: '/safetytraining', name: 'safetytraining', element: <Safetytraining /> },
+//   { path: '/safetytrainingsafety', name: 'safetytrainingsafety', element: <Safetytraining /> },
+//   { path: '/accidentform', name: 'accidentform', element: <Accident /> },
+// ];
+
+// export default routes;
