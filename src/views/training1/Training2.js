@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TextField, IconButton, Fab, Box
+  Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TextField, IconButton, Fab, Box,
+  Typography
 } from '@mui/material';
 import { Delete as DeleteIcon, Add as AddIcon, Check as CheckIcon } from '@mui/icons-material';
 
@@ -113,12 +114,13 @@ const Training = ({ onEmployeesChange }) => {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>Sl. No</TableCell>
-              <TableCell>Employee ID</TableCell>
-              <TableCell>Employee Name</TableCell>
-              <TableCell>Actions</TableCell>
+              <TableCell >Sl. No</TableCell>
+              <TableCell sx={{ pl: 12 }}>Employee ID</TableCell>
+              <TableCell sx={{ pl: 12 }}>Employee Name</TableCell>
+              <TableCell sx={{ pl: 2 }}>Actions</TableCell>
             </TableRow>
           </TableHead>
+       
           <TableBody>
             {rows.map((row, index) => (
               <TableRow key={index}>

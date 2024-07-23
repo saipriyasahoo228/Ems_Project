@@ -37,6 +37,8 @@ const Accident = () => {
   const [compressedImageBase64, setCompressedImageBase64] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
+  const [errors, setErrors] = useState({});
+
   const handleReport = (e) => {
     setAboutTheAccident(e.target.value);
   };
@@ -79,10 +81,36 @@ const Accident = () => {
     setToolboxReferenceNumber(event.target.value);
   };
 
+  const validateForm = () => {
+    const newErrors = {};
+
+    if (!accident_report_date) newErrors.accident_report_date = 'Date is required';
+    if (!accident_id) newErrors.accident_id = 'Reference Number is required';
+    if (!accident_type) newErrors.accident_type = 'Incident Type is required';
+
+    if (accident_type === '2') {
+      if (!severity) newErrors.severity = 'Severity is required';
+      if (!permit_status) newErrors.permit_status = 'Permit Status is required';
+      if (!ppe_status) newErrors.ppe_status = 'PPE Status is required';
+      if (toolbox_train === 'true' && !toolbox_reference_number) {
+        newErrors.toolbox_reference_number = 'ToolBox Reference Number is required when Tool Box Talk is Yes';
+      }
+      if (!about_the_accident) newErrors.about_the_accident = 'Details about the accident are required';
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
+
+    if (!validateForm()) {
+      return;
+    }
+
     setIsLoading(true);
-    
+
     const formData = {
       accident_reporting_date: accident_report_date,
       accident_id,
@@ -162,6 +190,8 @@ const Accident = () => {
                     }}
                     value={accident_report_date}
                     onChange={handleDateChange}
+                    error={!!errors.accident_report_date}
+                    helperText={errors.accident_report_date}
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
@@ -170,26 +200,30 @@ const Accident = () => {
                     fullWidth
                     onChange={handleReferenceNumberChange}
                     value={accident_id}
+                    error={!!errors.accident_id}
+                    helperText={errors.accident_id}
                   />
                 </Grid>
               </Grid>
               <Divider sx={{ marginY: 3 }} />
-              <FormControl component="fieldset" margin="normal">
+              <FormControl component="fieldset" margin="normal" error={!!errors.accident_type}>
                 <FormLabel component="legend">Incident Type</FormLabel>
                 <RadioGroup row value={accident_type} onChange={handleReportTypeChange}>
                   <FormControlLabel value="2" control={<Radio />} label="Accident" />
                   <FormControlLabel value="1" control={<Radio />} label="Near Miss" />
+                  <FormControlLabel value="3" control={<Radio />} label="Violance" />
                 </RadioGroup>
+                {errors.accident_type && <Typography color="error">{errors.accident_type}</Typography>}
               </FormControl>
 
               {accident_type && (
                 <Grid container spacing={2}>
                   <Grid item xs={12}>
-                    <Typography gutterBottom>Reported By:</Typography>
+                    <Typography gutterBottom>Reported By: ( Enter 0 in case of Others)</Typography>
                     <Training1 onEmployeesChange={(updatedRows) => handleInputChange('reported_by', updatedRows)} initialWhitelevelId={whitelevel} />
                   </Grid>
                   <Grid item xs={12}>
-                    <Typography gutterBottom>Workmen Involved:</Typography>
+                    <Typography gutterBottom>Workmen Involved: ( Enter 0 in case of Others)</Typography>
                     <Training1 onEmployeesChange={(updatedRows) => handleInputChange('workmen', updatedRows)} initialWhitelevelId={whitelevel} />
                   </Grid>
                   <Grid item xs={12}>
@@ -200,7 +234,7 @@ const Accident = () => {
                   {accident_type === '2' && (
                     <>
                       <Grid item xs={12}>
-                        <FormControl component="fieldset">
+                        <FormControl component="fieldset" error={!!errors.severity}>
                           <FormLabel component="legend">Type Of Accident</FormLabel>
                           <RadioGroup row value={severity} onChange={handleSeverityChange}>
                             <FormControlLabel value="1" control={<Radio />} label="1" />
@@ -209,10 +243,11 @@ const Accident = () => {
                             <FormControlLabel value="4" control={<Radio />} label="4" />
                             <FormControlLabel value="5" control={<Radio />} label="5" />
                           </RadioGroup>
+                          {errors.severity && <Typography color="error">{errors.severity}</Typography>}
                         </FormControl>
                       </Grid>
                       <Grid item xs={12}>
-                        <FormControl component="fieldset">
+                        <FormControl component="fieldset" error={!!errors.permit_status}>
                           <FormLabel component="legend">Permit Status</FormLabel>
                           <RadioGroup row value={permit_status} onChange={handlePermitStatusChange}>
                             <FormControlLabel value="4" control={<Radio />} label="Valid" />
@@ -220,15 +255,17 @@ const Accident = () => {
                             <FormControlLabel value="2" control={<Radio />} label="No Permit" />
                             <FormControlLabel value="1" control={<Radio />} label="Expired" />
                           </RadioGroup>
+                          {errors.permit_status && <Typography color="error">{errors.permit_status}</Typography>}
                         </FormControl>
                       </Grid>
                       <Grid item xs={12} sm={6}>
-                        <FormControl component="fieldset">
+                        <FormControl component="fieldset" error={!!errors.ppe_status}>
                           <FormLabel component="legend">PPE Status</FormLabel>
                           <RadioGroup row value={ppe_status} onChange={handlePpeStatusChange}>
                             <FormControlLabel value="2" control={<Radio />} label="OK" />
                             <FormControlLabel value="1" control={<Radio />} label="Faulty" />
                           </RadioGroup>
+                          {errors.ppe_status && <Typography color="error">{errors.ppe_status}</Typography>}
                         </FormControl>
                       </Grid>
                       <Grid item xs={12} sm={6}>
@@ -246,9 +283,15 @@ const Accident = () => {
                             onChange={handleReference}
                             value={toolbox_reference_number}
                             sx={{ marginTop: 2 }}
+                            error={!!errors.toolbox_reference_number}
+                            helperText={errors.toolbox_reference_number}
                           />
                         )}
                       </Grid>
+                     
+                    </>
+                  )}
+
                       <Grid item xs={12}>
                         <FormControl fullWidth margin="normal">
                           <TextField
@@ -257,14 +300,14 @@ const Accident = () => {
                             rows={4}
                             value={about_the_accident}
                             onChange={handleReport}
+                            error={!!errors.about_the_accident}
+                            helperText={errors.about_the_accident}
                           />
                         </FormControl>
                       </Grid>
                       <Grid item xs={12}>
                         <Imagecompression setCompressedImageBase64={setCompressedImageBase64}/>
                       </Grid>
-                    </>
-                  )}
                 </Grid>
               )}
              <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: 3 }}>

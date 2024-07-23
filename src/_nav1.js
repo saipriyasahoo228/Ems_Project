@@ -49,30 +49,36 @@ const _nav1 = [
     icon: <CIcon icon={cilPencil} customClassName="nav-icon" />,
   },
   {
-    component: CNavTitle,
-    name: 'Components',
+    component: CNavItem,
+    name: 'Medical Check UP ',
+    to: '/medicalCheckUp',
+    icon: <CIcon icon={cilPencil} customClassName="nav-icon" />,
   },
-  {
-    component: CNavGroup,
-    name: 'Upcoming Issuance',
-    to: '/base',
-    icon: <CIcon icon={cilPuzzle} customClassName="nav-icon" />,
-    items: [
-      {
-        component: CNavItem,
-        name: '15 days',
-        to: '/upcoming15daysbody',
-      },
-      {
-        component: CNavItem,
-        name: '30 days',
-        to: '/upcoming30daysbody',
-      },
-      {
-        component: CNavItem,
-        name: '45 days',
-        to: '/upcoming45daysbody',
-      },
+  // {
+  //   component: CNavTitle,
+  //   name: 'Components',
+  // },
+  // {
+  //   component: CNavGroup,
+  //   name: 'Upcoming Issuance',
+  //   to: '/base',
+  //   icon: <CIcon icon={cilPuzzle} customClassName="nav-icon" />,
+  //   items: [
+  //     {
+  //       component: CNavItem,
+  //       name: '15 days',
+  //       to: '/upcoming15daysbody',
+  //     },
+  //     {
+  //       component: CNavItem,
+  //       name: '30 days',
+  //       to: '/upcoming30daysbody',
+  //     },
+  //     {
+  //       component: CNavItem,
+  //       name: '45 days',
+  //       to: '/upcoming45daysbody',
+  //     },
       // {
       //   component: CNavItem,
       //   name: 'Carousel',
@@ -133,8 +139,8 @@ const _nav1 = [
       //   name: 'Tooltips',
       //   to: '/base/tooltips',
       // },
-    ],
-  },
+  //   ],
+  // },
 //   {
 //     component: CNavGroup,
 //     name: 'Reports',

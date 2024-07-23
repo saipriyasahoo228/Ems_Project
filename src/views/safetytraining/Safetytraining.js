@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import Training2 from '../training1/Training2';
 import {
-  Box, Typography, TextField, RadioGroup, FormControlLabel, Radio, FormControl, Card, CardContent, Divider, Grid, Button, InputLabel, Select,
-  MenuItem, Container, CircularProgress, Backdrop, Alert, AlertTitle,
+  Box, Typography,  FormControl ,TextField, RadioGroup, FormControlLabel, Radio, Card, CardContent, Divider, Grid, Button, Container, CircularProgress, Alert, AlertTitle,
 } from '@mui/material';
 import Imagecompression from '../imagecompression/Imagecompression';
 
@@ -17,7 +16,18 @@ const Safetytraining = () => {
   const [trainees, setTrainees] = useState([]);
   const [compressedImageBase64, setCompressedImageBase64] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(''); // New state for error message
+  const [about_the_training, setAbout_the_training] = useState('');
+  const [errors, setErrors] = useState({
+    trainingDate: '',
+    trainingId: '',
+    whitelevelId: '',
+    trainingType: '',
+    trainingName: '',
+    trainers: '',
+    trainees: '',
+    image: '',
+    about_the_training
+  });
 
   const handleInputChange = (role, updatedRows) => {
     if (role === 'trainers') setTrainers(updatedRows);
@@ -36,6 +46,7 @@ const Safetytraining = () => {
     const selectedValue = event.target.value;
     setTraining_type(selectedValue);
     setShowOtherTrainingField(selectedValue === '1'); // Show field if "Others" is selected
+    setErrors({ ...errors, trainingType: selectedValue === '' ? 'Training Type is required' : '' });
   };
 
   const handleOtherTrainingNameChange = (event) => {
@@ -45,70 +56,51 @@ const Safetytraining = () => {
   const handleTrainingIdChange = (event) => {
     setTraining_id(event.target.value);
   };
-
-  const resetForm = () => {
-    setWhitelevel_id('cttc1234');
-    setTraining_date('');
-    setTraining_id('');
-    setTraining_type('1');
-    setTraining_name('');
-    setShowOtherTrainingField(false);
-    setTrainers([]);
-    setTrainees([]);
-    setCompressedImageBase64('');
-    setIsLoading(false);
-    setError('');
+  const handleTraining = (e) =>{
+    setAbout_the_training(e.target.value);
   };
 
   const today = new Date().toISOString().split('T')[0]; // Get today's date in YYYY-MM-DD format
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    setIsLoading(true); // Set loading to true when form is submitted
-    setError(''); // Clear any previous errors
+    setIsLoading(true);
 
-    // Check for required fields
-    if (!training_date || !training_id || !whitelevel_id || (training_type === '1' && !training_name)) {
-      alert('Please fill in all required fields.');
-      setIsLoading(false); // Set loading to false if validation fails
+    // Validate required fields
+    let formValid = true;
+    const newErrors = {
+      trainingDate: !training_date ? 'Training Date is required' : '',
+      trainingId: !training_id ? 'Training ID is required' : '',
+      whitelevelId: !whitelevel_id ? 'Whitelevel ID is required' : '',
+      trainingType: !training_type ? 'Training Type is required' : '',
+      trainingName: training_type === '1' && !training_name ? 'Training Name is required' : '',
+      trainers: trainers.length === 0 ? 'At least one Trainer is required' : '',
+      trainees: trainees.length === 0 ? 'At least one Trainee is required' : '',
+      about_the_training:about_the_training.length === 0 ? ' About the training is required ':' ', 
+      image: !compressedImageBase64 ? 'Image Upload is required' : '',
+    };
+
+    setErrors(newErrors);
+
+    // Check if any field has error
+    Object.values(newErrors).forEach((error) => {
+      if (error) {
+        formValid = false;
+      }
+    });
+
+    if (!formValid) {
+      setIsLoading(false);
       return;
     }
 
-    // Check for empty trainers and trainees fields
-    if (trainers.length === 0 && trainees.length === 0) {
-      alert('Please add at least one trainer or trainee.');
-      setIsLoading(false); // Set loading to false if validation fails
-      return;
-    }
-
-    // Check for duplicate entries within trainers and trainees
-    const trainerIds = trainers.map(t => t.trainer_id).filter(id => id);
-    const traineeIds = trainees.map(t => t.trainee_id).filter(id => id);
-
-    const allIds = [...trainerIds, ...traineeIds];
-    const duplicates = allIds.filter((item, index) => allIds.indexOf(item) !== index);
-
-    if (duplicates.length > 0) {
-      alert(`Duplicate entries found for IDs: ${duplicates.join(', ')}`);
-      setIsLoading(false); // Set loading to false if validation fails
-      return;
-    }
-
-    // Check for empty trainer or trainee IDs
-    const invalidTrainerEntries = trainers.some(t => !t.trainer_id);
-    const invalidTraineeEntries = trainees.some(t => !t.trainee_id);
-
-    if (invalidTrainerEntries || invalidTraineeEntries) {
-      alert('Please provide employee codes for all trainers and trainees.');
-      setIsLoading(false); // Set loading to false if validation fails
-      return;
-    }
-
+    // Prepare form data for submission
     const formData = {
       training_id,
       training_date,
       whitelevel_id,
       training_type,
+      about_the_training,
       training_name: training_type === '1' ? training_name : null,
       trainers: trainers.map(({ trainer_id, whitelevel_id, trainer_name }) => ({
         trainer_id,
@@ -135,7 +127,7 @@ const Safetytraining = () => {
       });
 
       if (!response.ok) {
-        const errorText = await response.text(); // Capture error text from response
+        const errorText = await response.text();
         throw new Error(`HTTP error! Status: ${response.status}, Message: ${errorText}`);
       }
 
@@ -143,9 +135,9 @@ const Safetytraining = () => {
       console.log('Success:', responseData);
     } catch (error) {
       console.error('Error in handleSubmit:', error.message);
-      setError('Network error occurred while submitting the form. Please try again later.'); // Set error message
+      setErrors({ ...newErrors, form: 'Network error occurred while submitting the form. Please try again later.' });
     } finally {
-      setIsLoading(false); // Set loading to false after request is completed
+      setIsLoading(false);
     }
   };
 
@@ -167,6 +159,8 @@ const Safetytraining = () => {
                     value={training_date}
                     onChange={handleDateChange}
                     max={today} // Set max attribute to disable future dates
+                    error={!!errors.trainingDate}
+                    helperText={errors.trainingDate}
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
@@ -175,6 +169,8 @@ const Safetytraining = () => {
                     fullWidth
                     value={training_id}
                     onChange={handleTrainingIdChange}
+                    error={!!errors.trainingId}
+                    helperText={errors.trainingId}
                   />
                 </Grid>
                 <Grid item xs={12}>
@@ -192,39 +188,77 @@ const Safetytraining = () => {
                       fullWidth
                       value={training_name}
                       onChange={handleOtherTrainingNameChange}
+                      error={!!errors.trainingName}
+                      helperText={errors.trainingName}
                     />
+                  )}
+                  {errors.trainingType && (
+                    <Typography variant="body2" color="error" sx={{ mt: 1 }}>
+                      {errors.trainingType}
+                    </Typography>
                   )}
                 </Grid>
                 <Grid item xs={12}>
                   <Divider sx={{ marginBottom: 3 }} />
-                  <Typography variant="h6">TRAINER:</Typography>
-                  <Training2 onEmployeesChange={(updatedRows) => handleInputChange('trainers', updatedRows)} />
-                </Grid>
-                <Grid item xs={12}>
-                  <Typography variant="h6">TRAINEE:</Typography>
-                  <Training2 onEmployeesChange={(updatedRows) => handleInputChange('trainees', updatedRows)} />
-                </Grid>
-                <Grid item xs={12}>
-                  <Imagecompression marginBottom={3} setCompressedImageBase64={setCompressedImageBase64}/>
-                </Grid>
-                <Grid item xs={12}>
-                  {error && (
-                    <Alert
-                      severity="error"
-                      sx={{ mb: 2 }}
-                      action={
-                        <Button color="inherit" size="small" onClick={resetForm}>
-                          OK
-                        </Button>
-                      }
-                    >
-                      <AlertTitle>Error</AlertTitle>
-                      {error}
-                    </Alert>
+                  <Typography variant="h6">TRAINER:     ( Enter 0 in case of Others)</Typography>
+                  <Training2
+                    onEmployeesChange={(updatedRows) => handleInputChange('trainers', updatedRows)}
+                    error={!!errors.trainers}
+                    helperText={errors.trainers}
+                  />
+                  {errors.trainers && (
+                    <Typography variant="body2" color="error" sx={{ mt: 1 }}>
+                      {errors.trainers}
+                    </Typography>
                   )}
-                  <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+                </Grid>
+                <Grid item xs={12}>
+                  <Typography variant="h6">TRAINEE:  </Typography>
+                  <Training2
+                    onEmployeesChange={(updatedRows) => handleInputChange('trainees', updatedRows)}
+                    error={!!errors.trainees}
+                    helperText={errors.trainees}
+                  />
+                  {errors.trainees && (
+                    <Typography variant="body2" color="error" sx={{ mt: 1 }}>
+                      {errors.trainees}
+                    </Typography>
+                  )}
+                </Grid>
+                <Grid item xs={12}>
+                        <FormControl fullWidth margin="normal">
+                          <TextField
+                            label="About the Training"
+                            multiline
+                            rows={4}
+                            value={about_the_training}
+                            onChange={handleTraining}
+                            error={!!errors.about_the_training}
+                            helperText={errors.about_the_training}
+                          />
+                        </FormControl>
+                  </Grid>
+                <Grid item xs={12}>
+                  <Imagecompression
+                    compressedImageBase64={compressedImageBase64}
+                    setCompressedImageBase64={setCompressedImageBase64}
+                    error={!!errors.image}
+                    helperText={errors.image}
+                  />
+                  {errors.image && (
+                    <Typography variant="body2" color="error" sx={{ mt: 1 }}>
+                      {errors.image}
+                    </Typography>
+                  )}
+                </Grid>
+                <Grid item xs={12}>
+                  <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: 2 }}>
                     <Button type="submit" variant="contained" color="primary" disabled={isLoading}>
-                      Submit
+                      {isLoading ? (
+                        <CircularProgress color="inherit" size={24} />
+                      ) : (
+                        'Submit'
+                      )}
                     </Button>
                   </Box>
                 </Grid>
@@ -233,11 +267,6 @@ const Safetytraining = () => {
           </Card>
         </form>
       </Box>
-
-      <Backdrop sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }} open={isLoading}>
-        <CircularProgress color="inherit" />
-        <Typography variant="h6" sx={{ ml: 2 }}>Submitting, please wait...</Typography>
-      </Backdrop>
     </Container>
   );
 };

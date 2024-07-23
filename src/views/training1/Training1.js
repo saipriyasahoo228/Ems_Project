@@ -466,8 +466,8 @@ const Training1 = ({ onEmployeesChange }) => {
           <TableHead>
             <TableRow>
               <TableCell>Sl. No</TableCell>
-              <TableCell>Employee ID</TableCell>
-              <TableCell>Employee Name</TableCell>
+              <TableCell sx={{ pl: 12 }}>Employee ID</TableCell>
+              <TableCell sx={{ pl: 12 }}>Employee Name</TableCell>
               <TableCell>Actions</TableCell>
             </TableRow>
           </TableHead>

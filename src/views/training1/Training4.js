@@ -84,8 +84,8 @@ const Training = ({ whitelevel, onChange }) => {
           <TableHead>
             <TableRow>
               <TableCell>Sl. No</TableCell>
-              <TableCell>Employee ID</TableCell>
-              <TableCell>Employee Name</TableCell>
+              <TableCell sx={{ pl: 12 }}>Employee ID</TableCell>
+              <TableCell sx={{ pl: 12 }}>Employee Name</TableCell>
               <TableCell>Actions</TableCell>
             </TableRow>
           </TableHead>
@@ -136,8 +136,8 @@ const Training = ({ whitelevel, onChange }) => {
         size="small"
         sx={{
           position: 'absolute',
-          bottom: -18,
-          left: '49%',
+          bottom: -20,
+          left: '47%',
           transform: 'translateX(-50%)',
           boxShadow: 'none',
           zIndex: 1

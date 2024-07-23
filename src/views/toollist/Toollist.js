@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { alpha } from '@mui/material/styles';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -15,11 +15,23 @@ import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Switch from '@mui/material/Switch';
-import DeleteIcon from '@mui/icons-material/Delete';
-import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
+import DownloadIcon from '@mui/icons-material/Download';
+import FilterListIcon from '@mui/icons-material/FilterList'; // Add this import
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
+
+// Create and configure your theme
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: '#556cd6',
+    },
+    secondary: {
+      main: '#19857b',
+    },
+  },
+});
 
 function createData(id, name, protein) {
   return { id, name, protein };
@@ -29,16 +41,6 @@ const rows = [
   createData(1, 'Clamp Meter', 4),
   createData(2, 'Plier', 2),
   createData(3, 'Hammer', 6),
-//   createData(4, 'Frozen yoghurt', 4.0),
-//   createData(5, 'Gingerbread', 3.9),
-//   createData(6, 'Honeycomb', 6.5),
-//   createData(7, 'Ice cream sandwich', 4.3),
-//   createData(8, 'Jelly Bean', 0.0),
-//   createData(9, 'KitKat', 7.0),
-//   createData(10, 'Lollipop', 0.0),
-//   createData(11, 'Marshmallow', 2.0),
-//   createData(12, 'Nougat', 37.0),
-//   createData(13, 'Oreo', 4.0),
 ];
 
 function descendingComparator(a, b, orderBy) {
@@ -116,7 +118,7 @@ EnhancedTableHead.propTypes = {
 };
 
 function EnhancedTableToolbar(props) {
-  const { numSelected } = props;
+  const { numSelected, onDownload } = props;
 
   return (
     <Toolbar
@@ -145,11 +147,18 @@ function EnhancedTableToolbar(props) {
           </IconButton>
         </Tooltip>
       ) : (
-        <Tooltip title="Filter list">
-          <IconButton>
-            <FilterListIcon />
-          </IconButton>
-        </Tooltip>
+        <>
+          <Tooltip title="Filter list">
+            <IconButton>
+              <FilterListIcon /> {/* Make sure FilterListIcon is imported */}
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Download">
+            <IconButton onClick={onDownload}>
+              <DownloadIcon />
+            </IconButton>
+          </Tooltip>
+        </>
       )}
     </Toolbar>
   );
@@ -157,6 +166,7 @@ function EnhancedTableToolbar(props) {
 
 EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
+  onDownload: PropTypes.func.isRequired,
 };
 
 export default function Toollist() {
@@ -202,7 +212,6 @@ export default function Toollist() {
 
   const isSelected = (id) => selected.indexOf(id) !== -1;
 
-  // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
   const visibleRows = React.useMemo(
@@ -214,53 +223,66 @@ export default function Toollist() {
     [order, orderBy, page, rowsPerPage],
   );
 
+  const handleDownload = () => {
+    const doc = new jsPDF();
+
+    doc.text('Tool List', 10, 10);
+    doc.autoTable({
+      head: [['Item Name', 'Number']],
+      body: rows.map(row => [row.name, row.protein]),
+    });
+
+    doc.save('ToolList.pdf');
+  };
+
   return (
-    <Box sx={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '60vh'  }}>
-      <Paper sx={{ width: '80%', mb: 2 }}>
-        <EnhancedTableToolbar numSelected={selected.length} />
-        <TableContainer>
-          <Table aria-labelledby="tableTitle" size="medium">
-            <EnhancedTableHead
-              order={order}
-              orderBy={orderBy}
-              onRequestSort={handleRequestSort}
-            />
-            <TableBody>
-              {visibleRows.map((row, index) => (
-                <TableRow
-                  hover
-                  onClick={(event) => handleClick(event, row.id)}
-                  role="checkbox"
-                  aria-checked={isSelected(row.id)}
-                  tabIndex={-1}
-                  key={row.id}
-                  selected={isSelected(row.id)}
-                  sx={{ cursor: 'pointer'}}
-                >
-                  <TableCell component="th" scope="row" padding="4">
-                    {row.name}
-                  </TableCell>
-                  <TableCell align="right">{row.protein}</TableCell>
-                </TableRow>
-              ))}
-              {emptyRows > 0 && (
-                <TableRow style={{ height: 53 * emptyRows }}>
-                  <TableCell colSpan={2} />
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
-          component="div"
-          count={rows.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
-      </Paper>
-    </Box>
+    <ThemeProvider theme={theme}>
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '60vh' }}>
+        <Paper sx={{ width: '80%', mb: 2 }}>
+          <EnhancedTableToolbar numSelected={selected.length} onDownload={handleDownload} />
+          <TableContainer>
+            <Table aria-labelledby="tableTitle" size="medium">
+              <EnhancedTableHead
+                order={order}
+                orderBy={orderBy}
+                onRequestSort={handleRequestSort}
+              />
+              <TableBody>
+                {visibleRows.map((row, index) => (
+                  <TableRow
+                    hover
+                    onClick={(event) => handleClick(event, row.id)}
+                    role="checkbox"
+                    aria-checked={isSelected(row.id)}
+                    tabIndex={-1}
+                    key={row.id}
+                    selected={isSelected(row.id)}
+                  >
+                    <TableCell component="th" id={`enhanced-table-checkbox-${index}`} scope="row">
+                      {row.name}
+                    </TableCell>
+                    <TableCell align="right">{row.protein}</TableCell>
+                  </TableRow>
+                ))}
+                {emptyRows > 0 && (
+                  <TableRow style={{ height: 53 * emptyRows }}>
+                    <TableCell colSpan={6} />
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <TablePagination
+            rowsPerPageOptions={[5, 10, 25]}
+            component="div"
+            count={rows.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+          />
+        </Paper>
+      </Box>
+    </ThemeProvider>
   );
 }

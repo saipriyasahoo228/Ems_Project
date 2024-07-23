@@ -13,19 +13,21 @@ import TableSortLabel from '@mui/material/TableSortLabel';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
-import Checkbox from '@mui/material/Checkbox';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import DeleteIcon from '@mui/icons-material/Delete';
 import FilterListIcon from '@mui/icons-material/FilterList';
+import DownloadIcon from '@mui/icons-material/Download';
 import { visuallyHidden } from '@mui/utils';
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
 
-function createData(id,slno,dresslist,issuedate,nextissue) {
-  return { id,slno,dresslist,issuedate,nextissue };
+function createData(id, slno, dresslist, issuedate, nextissue) {
+  return { id, slno, dresslist, issuedate, nextissue };
 }
 
 const rows = [
-  createData(1,'21mmca60','Raincoat','5/3/20024','5/8/2024'),
+  createData(1, '21mmca60', 'Raincoat', '5/3/2024', '5/8/2024'),
   // additional rows...
 ];
 
@@ -62,7 +64,6 @@ const headCells = [
   { id: 'dresslist', numeric: true, disablePadding: false, label: 'DRESS LIST' },
   { id: 'issuedate', numeric: true, disablePadding: false, label: 'ISSUED DATE' },
   { id: 'nextissue', numeric: true, disablePadding: false, label: 'NEXT ISSUANCE' },
- 
 ];
 
 function EnhancedTableHead(props) {
@@ -74,7 +75,6 @@ function EnhancedTableHead(props) {
   return (
     <TableHead>
       <TableRow>
-        {/* Remove the checkbox column */}
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
@@ -111,7 +111,7 @@ EnhancedTableHead.propTypes = {
 };
 
 function EnhancedTableToolbar(props) {
-  const { numSelected } = props;
+  const { numSelected, onPdfDownload } = props;
 
   return (
     <Toolbar
@@ -133,30 +133,40 @@ function EnhancedTableToolbar(props) {
         </Typography>
       )}
 
-      {numSelected > 0 ? (
-        <Tooltip title="Delete">
-          <IconButton>
-            <DeleteIcon />
-          </IconButton>
-        </Tooltip>
-      ) : (
-        <Tooltip title="Filter list">
-          <IconButton>
-            <FilterListIcon />
-          </IconButton>
-        </Tooltip>
-      )}
+      <Box sx={{ flex: 1, display: 'flex', justifyContent: 'flex-end' }}>
+        {numSelected > 0 ? (
+          <Tooltip title="Delete">
+            <IconButton>
+              <DeleteIcon />
+            </IconButton>
+          </Tooltip>
+        ) : (
+          <>
+            <Tooltip title="Download PDF">
+              <IconButton onClick={onPdfDownload}>
+                <DownloadIcon />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Filter list">
+              <IconButton>
+                <FilterListIcon />
+              </IconButton>
+            </Tooltip>
+          </>
+        )}
+      </Box>
     </Toolbar>
   );
 }
 
 EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
+  onPdfDownload: PropTypes.func.isRequired, // Add this line
 };
 
 export default function Aftersearchdress() {
   const [order, setOrder] = React.useState('asc');
-  const [orderBy, setOrderBy] = React.useState('empcode');
+  const [orderBy, setOrderBy] = React.useState('slno');
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
@@ -218,10 +228,20 @@ export default function Aftersearchdress() {
     [order, orderBy, page, rowsPerPage]
   );
 
+  // Function to handle PDF download
+  const handlePdfDownload = () => {
+    const doc = new jsPDF();
+    doc.autoTable({
+      head: [['SL NO.', 'DRESS LIST', 'ISSUED DATE', 'NEXT ISSUANCE']],
+      body: rows.map((row) => [row.slno, row.dresslist, row.issuedate, row.nextissue]),
+    });
+    doc.save('Dress_Report.pdf');
+  };
+
   return (
     <Box sx={{ width: '100%' }}>
-      <Paper sx={{ width: '100%', mb: 2 ,padding:5}}>
-        <EnhancedTableToolbar numSelected={selected.length} />
+      <Paper sx={{ width: '100%', mb: 2, padding: 5 }}>
+        <EnhancedTableToolbar numSelected={selected.length} onPdfDownload={handlePdfDownload} />
         <TableContainer>
           <Table sx={{ minWidth: 730 }} aria-labelledby="tableTitle">
             <EnhancedTableHead
@@ -248,20 +268,18 @@ export default function Aftersearchdress() {
                     selected={isItemSelected}
                     sx={{ cursor: 'pointer' }}
                   >
-                    {/* Remove the checkbox column */}
                     <TableCell component="th" id={labelId} scope="row" padding="none">
                       {row.slno}
                     </TableCell>
                     <TableCell align="right">{row.dresslist}</TableCell>
                     <TableCell align="right">{row.issuedate}</TableCell>
                     <TableCell align="right">{row.nextissue}</TableCell>
-                    
                   </TableRow>
                 );
               })}
               {emptyRows > 0 && (
                 <TableRow style={{ height: 53 * emptyRows }}>
-                  <TableCell colSpan={6} />
+                  <TableCell colSpan={headCells.length} />
                 </TableRow>
               )}
             </TableBody>

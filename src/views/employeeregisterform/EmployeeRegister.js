@@ -154,10 +154,12 @@ const EmployeeRegister = () => {
       console.log("formData:", formData);
 
       try {
-        const response = await fetch('http://192.168.0.166:8000/employee/register/', {
+        const token = localStorage.getItem('accessToken');; // Retrieve access token from localStorage'
+        const response = await fetch('http://192.168.0.166:8080/employee/register/', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`, // Include access token in headers
           },
           body: JSON.stringify(formData),
         });
@@ -172,7 +174,7 @@ const EmployeeRegister = () => {
         const data = await response.json();
         console.log('Success:', data);
         alert('Registration successful!');
-        navigate('/login'); // Navigate to success page
+        //navigate('/login'); // Navigate to success page
 
         // Reset form fields after successful submission
         setWhiteLevelId('cttc1234');
@@ -290,14 +292,14 @@ const EmployeeRegister = () => {
                 >
                   <option value="1">Employee</option>
                   <option value="2">Supervisor</option>
+                  <option value="3">Office Staff</option>
                 </CFormSelect>
                 <CFormLabel htmlFor="role">Select Role</CFormLabel>
               </CFormFloating>
-              <div style={{ textAlign: 'center' }}>
-                <CButton type="submit" color="primary" shape="rounded-pill" disabled={loading}>
-                  {loading ? <CSpinner size="sm" /> : 'Submit'}
-                </CButton>
-              </div>
+              <CButton type="submit" color="primary" className="me-3">
+                {loading ? <CSpinner size="sm" color="light" /> : 'Submit'}
+              </CButton>
+              
             </CCardBody>
           </CCard>
         </CCol>

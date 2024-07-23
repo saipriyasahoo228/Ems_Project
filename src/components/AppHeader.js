@@ -81,7 +81,7 @@ const AppHeader = () => {
             </CNavLink>
           </CNavItem>
         </CHeaderNav> */}
-        <h1>Industrial Safety Management System</h1>
+        <h1>Contractor Safety Management System</h1>
         <CHeaderNav>
           <li className="nav-item py-1">
             <div className="vr h-100 mx-2 text-body text-opacity-75"></div>

@@ -19,6 +19,9 @@ const empregister=React.lazy(()=>import('./views/employeeregisterform/EmployeeRe
 const newissuance=React.lazy(()=>import('./views/newissuance/Newissuance'))
 const safetytraining=React.lazy(()=>import('./views/safetytraining/Safetytraining'))
 const accidentform=React.lazy(()=>import('./views/accidentform/Accident'))
+const medicalCheckUp=React.lazy(()=> import('./views/medicalCheckup/MedicalCheckUp'))
+
+// const Medical =React.lazy(() => import('./views/medicalCheckup/MedicalCheckUp'))
 // const Typography = React.lazy(() => import('./views/theme/typography/Typography'))
 
 // // Base
@@ -90,6 +93,8 @@ const routes = [
   {path:"/safetytraining",name:'safetytraining',element:safetytraining},
   {path:"/safetytrainingsafety",name:'safetytrainingsafety',element:safetytraining},
   {path:"/accidentform/",name:'accidentform',element:accidentform},
+  {path:"/medicalCheckUp",name:'medicalCheckUp',element:medicalCheckUp},
+  // {path:"/medical", name:"Medical Search", element:Medical}
   // { path: '/theme/typography', name: 'Typography', element: Typography },
   // { path: '/base', name: 'Base', element: Cards, exact: true },
   // { path: '/base/accordion', name: 'Accordion', element: Accordion },

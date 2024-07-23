@@ -12,6 +12,8 @@ const Login = React.lazy(() => import('./views/pages/login/Login'));
 const Register = React.lazy(() => import('./views/pages/register/Register'));
 const Page404 = React.lazy(() => import('./views/pages/page404/Page404'));
 const Page500 = React.lazy(() => import('./views/pages/page500/Page500'));
+const Medical =React.lazy(() => import('./views/medicalCheckup/MedicalCheckUp'))
+
 
 // New Components
 // const Employeewisesearch = React.lazy(() => import('./views/pages/Employeewisesearch'));
@@ -39,7 +41,7 @@ const App = () => {
     <HashRouter>
       <Suspense
         fallback={
-          <div className="pt-3 text-center">
+          <div className="pt-3 text-center">    
             <CSpinner color="primary" variant="grow" />
           </div>
         }
@@ -50,7 +52,7 @@ const App = () => {
           <Route path="/register" name="Register Page" element={<Register />} />
           <Route path="/404" name="Page 404" element={<Page404 />} />
           <Route path="/500" name="Page 500" element={<Page500 />} />
-          {/* <Route path="/empsearch" name="Employee Search" element={<Employeewisesearch />} /> */}
+          <Route path="/medical" name="Medical Search" element={<Medical />} />
           {/* <Route path="/aftersearch" name="After Search" element={<AfterSearchBody />} /> */}
           <Route path="*" name="Home" element={<DefaultLayout />} />
         </Routes>
